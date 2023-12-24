@@ -1,0 +1,6 @@
+{{define "index"}}
+{{template "header" .}}
+<h1 id="welcome-msg">Hello from Golang</h1>
+<button hx-get="/test" hx-trigger="click" hx-target="#welcome-msg" hx-swap="outerHTML">Click me!</button>
+{{template "footer" .}}
+{{end}}
