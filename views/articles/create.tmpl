@@ -1,0 +1,38 @@
+{{define "create"}}
+{{template "admin_header" .}}
+{{template "navbar" .}}
+<div class="container">
+	<div class="mt-5">
+		<div id="create-article-alert"></div>
+		<div id="create-article-form" class="card mt-3">
+			<div class="card-body">
+				<form hx-post="/post/article" hx-target="#create-article-alert" hx-swap="innerHTML">
+					<div class="mb-3">
+						<input name="title" type="text" placeholder="The title of the article" class="form-control">
+					</div>
+					<div class="mb-3">
+						<input name="slug" type="text" placeholder="The slug of the article" class="form-control">
+					</div>
+					<div class="mb-3">
+						<input name="description" type="text" placeholder="A description of the article" class="form-control">
+					</div>
+					<div class="mb-3">
+						<input name="author" type="text" placeholder="The author of the article" class="form-control">
+					</div>
+					<div class="mb-3">
+						<select name="status" class="form-select">
+							<option value="unpublished" selected>Unpublished</option>
+							<option value="published">Published</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<textarea name="content" placeholder="The content of the article (in Markdown)" class="form-control" style="min-height: 250px; max-height: 250px;"></textarea>
+					</div>
+					<button type="submit" class="btn btn-success">Create article</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{template "footer" .}}
+{{end}}

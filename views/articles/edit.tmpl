@@ -1,0 +1,43 @@
+{{define "edit"}}
+{{template "admin_header" .}}
+{{template "navbar" .}}
+<div class="container">
+	<div class="mt-5">
+		<div id="edit-article-alert"></div>
+		<div id="edit-article-form" class="card mt-3">
+			<div class="card-body">
+				<form hx-put="/put/article?id={{$.ID}}" hx-target="#edit-article-alert" hx-swap="innerHTML">
+					<div class="mb-3">
+						<input name="title" type="text" value="{{$.Title}}" class="form-control">
+					</div>
+					<div class="mb-3">
+						<input name="slug" type="text" value="{{$.Slug}}" class="form-control">
+					</div>
+					<div class="mb-3">
+						<input name="description" type="text" value="{{$.Description}}" class="form-control">
+					</div>
+					<div class="mb-3">
+						<input name="author" type="text" value="{{$.Author}}" class="form-control">
+					</div>
+					<div class="mb-3">
+						<select name="status" class="form-select">
+							{{if eq $.Status "unpublished"}}
+							<option value="unpublished" selected>Unpublished</option>
+							<option value="published">Published</option>
+							{{else}}
+							<option value="unpublished">Unpublished</option>
+							<option value="published" selected>Published</option>
+							{{end}}
+						</select>
+					</div>
+					<div class="mb-3">
+						<textarea name="content" class="form-control" style="min-height: 250px; max-height: 250px;">{{$.Content}}</textarea>
+					</div>
+					<button type="submit" class="btn btn-success">Edit article</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{template "footer" .}}
+{{end}}

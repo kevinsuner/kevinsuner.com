@@ -1,0 +1,12 @@
+{{define "article"}}
+{{template "header" .}}
+{{template "navbar" .}}
+<div class="container">
+	<h1 class="mt-5">{{$.Article.Title}}</h1>
+	<p>Published by {{$.Article.Author}} on {{$.Article.CreatedAt.String}} {{if $.Article.UpdatedAt.String}}| Updated on {{$.Article.UpdatedAt.String}}{{end}}</p>
+	<div class="mt-3 pt-3 border-top">
+		{{$.HTML}}
+	</div>
+</div>
+{{template "footer" .}}
+{{end}}

@@ -1,77 +1,55 @@
 package main
 
 import (
-	"bytes"
 	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
-/*** data ***/
-
-const TEMPLATES_DIR string = "templates"
-const PARTIALS_DIR string = "partials"
+const ARTICLES_LIMIT int = 3
 
 var db *sql.DB
 
-/*** endpoints  ***/
-
-func test(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte(`<h1 id="welcome-msg">Hello from Golang and HTMX</h1>`))
-}
-
-func index(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("index").ParseFiles(
-		filepath.Join(TEMPLATES_DIR, PARTIALS_DIR, "header.html"),
-		filepath.Join(TEMPLATES_DIR, PARTIALS_DIR, "footer.html"),
-		filepath.Join(TEMPLATES_DIR, "index.html"))
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("[ERROR] failed to parse template")
-		return
-	}
-	
-	var buf bytes.Buffer
-	err = t.Execute(&buf, nil)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("[ERROR] failed to execute template")
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write(buf.Bytes())
-}
-
-/*** init ***/
+var templateFuncs = template.FuncMap{
+	"Iterate": func(count int) []int {
+		var numbers []int
+		for i := 0; i <= count; i++ {
+			numbers = append(numbers, i)
+		}
+		return numbers
+	},
+	"Offset": func(num int) int {
+		return num * ARTICLES_LIMIT
+	}}
 
 func init() {
 	err := godotenv.Load()
-	if err != nil { panic(err) }
+	if err != nil {
+		log.Fatalf("[ERROR] failed to load .env file: %v\n", err)
+	}
 
-	var name string = os.Getenv("PQ_NAME")
-	var user string = os.Getenv("PQ_USER")
-	var pass string = os.Getenv("PQ_PASS")
-	
-	db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@tcp/%s?sslmode=disable", user, pass, name))
-	if err != nil { panic(err) }
+	db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
+		os.Getenv("PQ_USER"), os.Getenv("PQ_PASS"), os.Getenv("PQ_IP"), os.Getenv("PQ_NAME")))
+	if err != nil {
+		log.Fatalf("[ERROR] failed to initialize db: %v\n", err)
+	}
 
-	log.Println("[INFO] connected to db successfully")
+	log.Println("[INFO] successfully connected to db")
 }
 
 func main() {
 	mux := http.NewServeMux()
-	fs := http.FileServer(http.Dir("./static"))
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
-	mux.HandleFunc("/", index)
-	mux.HandleFunc("/test", test)
-	http.ListenAndServe(":8080", mux)
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	
+	InitEndpoints(mux)
+	InitViews(mux)
+	
+	log.Printf("[INFO] started http server at port %s\n", os.Getenv("PORT"))
+	http.ListenAndServe(os.Getenv("PORT"), mux)
 }

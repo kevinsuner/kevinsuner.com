@@ -1,0 +1,25 @@
+{{define "homepage"}}
+{{template "header" .}}
+{{template "navbar" .}}
+<div class="container">
+	<div id="articles" class="mt-5">
+		<div hx-get="/get/articles" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+			<h1>No articles found</h1>
+			<h4 class="text-secondary">The articles that you publish will be shown here</h4>
+		</div>
+	</div>
+	{{if gt $.Pages 0}}
+	<div class="btn-toolbar" role="toolbar">
+		{{range $i := Iterate $.Pages}}
+		<div class="btn-group me-2" role="group">
+			{{$offset := Offset $i}}
+			<button type="button" class="btn btn-success" hx-get="/get/articles?offset={{$offset}}" hx-target="#articles" hx-swap="innerHTML">
+				{{len (printf "a%*s" $i "")}}
+			</button>
+		</div>
+		{{end}}
+	</div>
+	{{end}}
+</div>
+{{template "footer" .}}
+{{end}}

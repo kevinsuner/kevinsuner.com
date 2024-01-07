@@ -6,7 +6,12 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 
-[*.{go,html}]
+[*.go]
+charset = utf-8
+indent_style = tab
+indent_size = 4
+
+[{views/**, views/layouts/**}]
 charset = utf-8
 indent_style = tab
 indent_size = 4

@@ -1,0 +1,39 @@
+{{define "articles"}}
+	{{range .Articles}}
+	<div class="card mb-4">
+		{{if $.IsAdmin}}
+		<div class="card-header">
+			<a href="/edit/article?id={{.ID}}" class="link-light link-underline-opacity-0">Edit</a> |
+			<a class="link-light link-underline-opacity-0" data-bs-toggle="modal" data-bs-target="#delete-article-modal" style="cursor: grab;">
+				Delete
+			</a>
+			<div class="modal fade" id="delete-article-modal" tabindex="-1"> 
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<p class="mb-0">You're about to delete <b>"{{.Title}}"</b></p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-danger" hx-delete="/delete/article?id={{.ID}}">
+								I want to delete this article
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{end}}
+		<div class="card-body">
+			<h2><a href="/article/{{.Slug}}" class="link-light link-underline-opacity-0">{{.Title}}</a></h2> 
+			<p class="mb-1">{{.Description}}</p>
+		</div>
+		<div class="card-footer text-body-secondary">
+			Published by {{.Author}} on {{.CreatedAt.String}} {{if .UpdatedAt.String}}| Updated on {{.UpdatedAt.String}}{{end}}
+		</div>
+	</div>
+	{{else}}
+	<h1>No articles found</h1>
+	<h4 class="text-secondary">The articles that you create will be shown here</h4>
+	{{end}}
+{{end}}
