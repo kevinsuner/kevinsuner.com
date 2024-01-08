@@ -21,7 +21,7 @@
 		{{range $i := Iterate $.Pages}}
 		<div class="btn-group me-2" role="group">
 			{{$offset := Offset $i}}
-			<button type="button" class="btn btn-success" hx-get="/get/articles?admin=true&offset={{$offset}}" hx-target="#articles" hx-swap="innerHTML">
+			<button type="button" class="btn btn-primary font-monospace" hx-get="/get/articles?admin=true&offset={{$offset}}" hx-target="#articles" hx-swap="innerHTML">
 				{{len (printf "a%*s" $i "")}}
 			</button>
 		</div>
