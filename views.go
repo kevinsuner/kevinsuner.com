@@ -229,7 +229,7 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query(`
 		SELECT title, content, link, image, caption FROM projects ORDER BY id ASC`)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to get articles: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("failed to get projects: %v", err), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -292,7 +292,15 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func AboutPage(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("about").Funcs(templateFuncs).ParseFiles(
+	var content string
+	err := db.QueryRow(
+		`SELECT content FROM pages WHERE title = 'about'`).Scan(&content)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("about").ParseFiles(
 		filepath.Join("views", "layouts", "header.tmpl"),
 		filepath.Join("views", "layouts", "navbar.tmpl"),
 		filepath.Join("views", "layouts", "footer.tmpl"),
@@ -304,13 +312,21 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
+	if err = goldmark.Convert([]byte(content), &buf); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
+		return
+	}
+	html := buf.String()
+
+	buf = bytes.Buffer{}
 	templateData := TemplateData{
 		Meta: Meta{
 			Description: "unimplemented!",
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Home | SIMPLEstack"}}
+			Title: "Home | SIMPLEstack"},
+		HTML: template.HTML(html)}
 
 	if err = t.Execute(&buf, templateData); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
