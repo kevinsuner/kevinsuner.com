@@ -26,6 +26,10 @@
     background-color: #232931;
 }
 
+.background-dark-secondary {
+    background-color: #222222;
+}
+
 .color-blue-primary {
     color: #00ADB5;
 }
@@ -42,3 +46,4 @@
     border-color: #00ADB5 !important;
     border-radius: 0 !important;
 }
+
