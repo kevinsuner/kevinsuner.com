@@ -1,0 +1,32 @@
+/* Custom Fonts */
+
+@font-face {
+    font-family: Monoid Regular;
+    src: url(/static/fonts/monoid-regular.ttf);
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Monoid Bold;
+    src: url(/static/fonts/monoid-bold.ttf);
+    font-weight: bold;
+}
+
+.font-monoid-regular {
+    font-family: Monoid Regular;
+}
+
+.font-monoid-bold {
+    font-family: Monoid Bold;
+}
+
+/* Colors */
+
+.background-dark-primary {
+    background-color: #232931;
+}
+
+.color-blue-primary {
+    color: #00ADB5;
+}
+
