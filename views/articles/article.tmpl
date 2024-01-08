@@ -2,9 +2,11 @@
 {{template "header" .}}
 {{template "navbar" .}}
 <div class="container">
-	<h1 class="mt-5">{{$.Article.Title}}</h1>
-	<p>Published by {{$.Article.Author}} on {{$.Article.CreatedAt.String}} {{if $.Article.UpdatedAt.String}}| Updated on {{$.Article.UpdatedAt.String}}{{end}}</p>
-	<div class="mt-3 pt-3 border-top">
+	<div class="mt-5">
+		<h4 class="color-blue-primary font-monoid-bold">{{$.Article.Title}}</h4>
+		<p class="font-monospace text-secondary mb-3">
+			{{$.Article.CreatedAt.String}} {{if $.Article.UpdatedAt.String}}| Edited on {{$.Article.UpdatedAt.String}}{{end}}
+		</p>
 		{{$.HTML}}
 	</div>
 </div>
