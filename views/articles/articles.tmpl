@@ -1,39 +1,47 @@
 {{define "articles"}}
 	{{range .Articles}}
-	<div class="card mb-4">
+	<div class="mb-4">
+		<h6 class="font-monoid-regular">
+			<a href="/article/{{.Slug}}" class="color-blue-primary">{{.Title}}</a>
+		</h6>
+		<p class="font-monospace mb-2">{{.Description}}</p>
 		{{if $.IsAdmin}}
-		<div class="card-header">
-			<a href="/edit/article?id={{.ID}}" class="link-light link-underline-opacity-0">Edit</a> |
+		<span class="badge background-dark-primary font-monospace border rounded-0">
+			<a href="/edit/article?id={{.ID}}" class="link-light link-underline-opacity-0">Edit</a>
+		</span>
+
+		<span class="badge background-dark-primary font-monospace border rounded-0">
 			<a class="link-light link-underline-opacity-0" data-bs-toggle="modal" data-bs-target="#delete-article-modal" style="cursor: grab;">
 				Delete
 			</a>
-			<div class="modal fade" id="delete-article-modal" tabindex="-1"> 
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-body">
-							<p class="mb-0">You're about to delete <b>"{{.Title}}"</b></p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-danger" hx-delete="/delete/article?id={{.ID}}">
-								I want to delete this article
-							</button>
-						</div>
+		</span>
+		<div class="modal fade" id="delete-article-modal" tabindex="-1"> 
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<p class="mb-0">You're about to delete <b>"{{.Title}}"</b></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" hx-delete="/delete/article?id={{.ID}}">
+							I want to delete this article
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<span class="badge background-dark-primary font-monospace border rounded-0">
+			Published on {{.CreatedAt.String}}
+		</span>
+		{{else}}
+		<span class="badge background-dark-primary font-monospace border rounded-0">
+			Published on {{.CreatedAt.String}}
+		</span>
 		{{end}}
-		<div class="card-body">
-			<h2><a href="/article/{{.Slug}}" class="link-light link-underline-opacity-0">{{.Title}}</a></h2> 
-			<p class="mb-1">{{.Description}}</p>
-		</div>
-		<div class="card-footer text-body-secondary">
-			Published by {{.Author}} on {{.CreatedAt.String}} {{if .UpdatedAt.String}}| Updated on {{.UpdatedAt.String}}{{end}}
-		</div>
 	</div>
 	{{else}}
-	<h1>No articles found</h1>
-	<h4 class="text-secondary">The articles that you create will be shown here</h4>
+	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+	<h5 class="font-monospace">Looks like there are no articles to show yet :(</h5>
 	{{end}}
 {{end}}
