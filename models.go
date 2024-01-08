@@ -27,10 +27,20 @@ type Meta struct {
 	UpdatedAt string
 }
 
+type Project struct {
+	Title string
+	Content string
+	Link string
+	Image string
+	Caption string
+	HTML template.HTML
+}
+
 type TemplateData struct {
 	Meta Meta
 	Article Article
 	Articles []Article
+	Projects []Project
 	HTML template.HTML
 	IsAdmin bool
 	Pages int
