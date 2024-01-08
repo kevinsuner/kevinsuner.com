@@ -30,3 +30,15 @@
     color: #00ADB5;
 }
 
+/* Buttons */
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:visited,
+.btn-primary:focus {
+    color: black !important;
+    background-color: #00ADB5 !important;
+    border-color: #00ADB5 !important;
+    border-radius: 0 !important;
+}
