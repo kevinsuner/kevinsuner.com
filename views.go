@@ -225,8 +225,43 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func Projects(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("projects").Funcs(templateFuncs).ParseFiles(
+func ProjectsPage(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query(`
+		SELECT title, content, link, image, caption FROM projects ORDER BY id ASC`)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get articles: %v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var projects []Project
+	for rows.Next() {
+		var project Project
+		if err = rows.Scan(
+			&project.Title,
+			&project.Content,
+			&project.Link,
+			&project.Image,
+			&project.Caption); err != nil {
+			http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		var buf bytes.Buffer
+		if err = goldmark.Convert([]byte(project.Content), &buf); err != nil {
+			http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		project.HTML = template.HTML(buf.String())
+		projects = append(projects, project)
+	}
+	if err = rows.Err(); err != nil {
+		http.Error(w, fmt.Sprintf("failed while iterating: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("projects").ParseFiles(
 		filepath.Join("views", "layouts", "header.tmpl"),
 		filepath.Join("views", "layouts", "navbar.tmpl"),
 		filepath.Join("views", "layouts", "footer.tmpl"),
@@ -244,7 +279,8 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Home | SIMPLEstack"}}
+			Title: "Home | SIMPLEstack"},
+		Projects: projects}
 
 	if err = t.Execute(&buf, templateData); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
@@ -333,6 +369,6 @@ func InitViews(mux *http.ServeMux) {
 	/*** Public ***/
 	mux.HandleFunc("/", Homepage)
 	mux.HandleFunc("/about", About)
-	mux.HandleFunc("/projects", Projects)
+	mux.HandleFunc("/projects", ProjectsPage)
 	mux.HandleFunc("/article/", ViewArticle)
 }

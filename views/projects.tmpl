@@ -10,36 +10,21 @@
 		</p>
 	</div>
 	<div class="mt-5">
+		{{range .Projects}}
 		<div class="mb-4">
 			<h6 class="font-monoid-regular">
-				<a href="#" class="color-blue-primary">SIMPLEstack</a>
+				<a href="{{.Link}}" class="color-blue-primary">{{.Title}}</a>
 			</h6>
-			<p class="font-monospace">
-			A free and simplistic <a href="https://en.wikipedia.org/wiki/Content_management_system" class="color-blue-primary">content management system</a> conceived to be used as boilerplate or starting point to create full-stack web applications using Go, HTMX and PostgreSQL.
-			</p>
-			<p class="font-monospace">
-			After seeing this sort of back-to-basics movement that started to emerge in the tech community, I decided that I wanted to work on a full-stack web application again, just not with PHP nor Javascript but Go. Thanks to <a href="https://www.youtube.com/channel/UC8ENHE5xdFSwx71u3fDH5Xw" class="color-blue-primary">ThePrimeagen</a> I discovered <a href="https://htmx.org/" class="color-blue-primary">HTMX</a> and from there SIMPLEstack was born and my desire to work on the front-end came back from the dead :)
-			</p>
+			{{.HTML}}
 			<figure class="figure text-center">
-				<img src="/static/img/simplestack-screenshot.png" class="figure-img img-fluid w-75" style="border: 16px solid white;">
-				<figcaption class="figure-caption font-monospace text-secondary mt-3">An screenshoot of the admin dashboard of SIMPLEstack</figcaption>
+				<img src="/static/img/{{.Image}}" class="figure-img img-fluid w-75" style="border: 16px solid white;">
+				<figcaption class="figure-caption font-monospace text-secondary mt-3">{{.Caption}}</figcaption>
 			</figure>
 		</div>
-		<div class="mb-4">
-			<h6 class="font-monoid-regular">
-				<a href="#" class="color-blue-primary">RunGo</a>
-			</h6>
-			<p class="font-monospace">
-			A free cross-platform Go playground that allows users to experiment, prototype and get instant feedback. It provides support for running Go versions from 1.16+, and is built on top of <a href="https://fyne.io/" class="color-blue-primary">Fyne</a>, a cross-platform GUI toolkit made with Go and inspired by <a href="https://en.wikipedia.org/wiki/Material_Design" class="color-blue-primary">Material Design</a>.
-			</p>
-			<p class="font-monospace">
-			One day at the office, a good colleague showed me <a href="https://runjs.app/" class="color-blue-primary">RunJS</a> which as the name suggests is a playground for running Javascript code, and more importantly he showed me, how he was able to try the same things I tried, but in a much more efficient way. After that the decision was clear as day and I set out to learn how to make desktop applications, because, I had and (still have) no idea on how I could do it :)
-			</p>
-			<figure class="figure text-center">
-				<img src="/static/img/run-go-screenshot.png" class="figure-img img-fluid w-75" style="border: 16px solid white;">
-				<figcaption class="figure-caption font-monospace text-secondary mt-3">A screenshot that showcases the editor and console in RunGo</figcaption>
-			</figure>
-		</div>
+		{{else}}
+		<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+		<h5 class="font-monospace">Looks like there are no projects to show yet :(</h5>
+		{{end}}
 	</div>
 </div>
 {{template "footer" .}}
