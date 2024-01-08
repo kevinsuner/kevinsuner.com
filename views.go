@@ -291,7 +291,7 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func About(w http.ResponseWriter, r *http.Request) {
+func AboutPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("about").Funcs(templateFuncs).ParseFiles(
 		filepath.Join("views", "layouts", "header.tmpl"),
 		filepath.Join("views", "layouts", "navbar.tmpl"),
@@ -321,7 +321,7 @@ func About(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func Homepage(w http.ResponseWriter, r *http.Request) {
+func HomePage(w http.ResponseWriter, r *http.Request) {
 	var pages int
 	err := db.QueryRow(fmt.Sprintf(`
 		SELECT COUNT(id) / %d as pages FROM articles WHERE status = 'published'`, ARTICLES_LIMIT)).Scan(&pages)
@@ -367,8 +367,8 @@ func InitViews(mux *http.ServeMux) {
 	mux.Handle("/edit/article", CheckCookie(http.HandlerFunc(EditArticle)))
 
 	/*** Public ***/
-	mux.HandleFunc("/", Homepage)
-	mux.HandleFunc("/about", About)
+	mux.HandleFunc("/", HomePage)
+	mux.HandleFunc("/about", AboutPage)
 	mux.HandleFunc("/projects", ProjectsPage)
 	mux.HandleFunc("/article/", ViewArticle)
 }
