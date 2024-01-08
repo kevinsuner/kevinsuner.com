@@ -224,6 +224,36 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
+func About(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("about").Funcs(templateFuncs).ParseFiles(
+		filepath.Join("views", "layouts", "header.tmpl"),
+		filepath.Join("views", "layouts", "navbar.tmpl"),
+		filepath.Join("views", "layouts", "footer.tmpl"),
+		filepath.Join("views", "about.tmpl"),
+	)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	templateData := TemplateData{
+		Meta: Meta{
+			Description: "unimplemented!",
+			Author: "Kevin Suñer",
+			Type: "website",
+			URL: fmt.Sprintf("https://%s", r.Host),
+			Title: "Home | SIMPLEstack"}}
+
+	if err = t.Execute(&buf, templateData); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func Homepage(w http.ResponseWriter, r *http.Request) {
 	var pages int
 	err := db.QueryRow(fmt.Sprintf(`
@@ -271,5 +301,6 @@ func InitViews(mux *http.ServeMux) {
 
 	/*** Public ***/
 	mux.HandleFunc("/", Homepage)
+	mux.HandleFunc("/about", About)
 	mux.HandleFunc("/article/", ViewArticle)
 }

@@ -1,0 +1,34 @@
+{{define "about"}}
+{{template "header" .}}
+{{template "navbar" .}}
+<div class="container">
+	<div class="mt-5">
+		<h4 class="color-blue-primary font-monoid-bold">About</h4>
+	</div>
+	<div class="mt-5">
+		<p>
+			<img src="/static/img/profile.jpeg" class="float-end ms-4 mb-4" style="width: 150px; height: 150px; border: 16px solid white;" />
+			<p class="font-monospace">
+			Kevin is a software engineer working on stuff such as distributed systems, identity management and developer experience. He has been
+			programming since the late 2000s after trying to cheat on a videogame called <a href="https://en.wikipedia.org/wiki/Lineage_II" class="color-blue-primary">Lineage II</a>.
+			</p>
+			
+			<p class="font-monospace">
+			In his free time, he likes to work on his own <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software" class="color-blue-primary">Free and open-source projects</a>; which you can find on this blog as it
+			documents some of his work. Here's a <a href="" class="color-blue-primary">list of projects</a> he has worked over the years. His current hobbies outside
+			programming include simracing, hiking and in the near future playing an instrument. 
+			</p>
+
+			<p class="font-monospace">
+			Career wise he would like to start moving from the <a href="https://en.wikipedia.org/wiki/Web_development" class="color-blue-primary">Web Development</a> space to in his view, a more challenging area
+			like <a href="https://en.wikipedia.org/wiki/Computer_graphics" class="color-blue-primary">Computer Graphics</a>, <a href="https://en.wikipedia.org/wiki/Compiler" class="color-blue-primary">Compilers</a> or <a href="https://en.wikipedia.org/wiki/Operating_system" class="color-blue-primary">Operating Systems</a>.
+			</p>
+
+			<p class="font-monospace">
+			This is a <b>personal blog</b>. His opinions are his own and do not represent those of his employer.
+			</p>
+		</p>
+	</div>
+</div>
+{{template "footer" .}}
+{{end}}
