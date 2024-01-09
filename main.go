@@ -34,15 +34,21 @@ func init() {
 		if err != nil {
 			log.Fatalf("[ERROR] failed to load .env file: %v\n", err)
 		}
+
+		db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
+			os.Getenv("PQ_USER"), os.Getenv("PQ_PASS"), os.Getenv("PQ_IP"), os.Getenv("PQ_NAME")))
+		if err != nil {
+			log.Fatalf("[ERROR] failed to initialize db: %v\n", err)
+		}
+	
+		log.Println("[INFO] successfully connected to db")
+		return
 	}
 
-	db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
-		os.Getenv("PQ_USER"), os.Getenv("PQ_PASS"), os.Getenv("PQ_IP"), os.Getenv("PQ_NAME")))
+	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatalf("[ERROR] failed to initialize db: %v\n", err)
 	}
-
-	log.Println("[INFO] successfully connected to db")
 }
 
 func main() {
