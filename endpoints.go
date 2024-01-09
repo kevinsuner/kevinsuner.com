@@ -24,7 +24,7 @@ func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = db.Exec("DELETE FROM public.articles WHERE id = $1", id)
+	_, err = db.Exec("DELETE FROM articles WHERE id = $1", id)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to delete article: %v", err), http.StatusInternalServerError)
 		return
@@ -69,7 +69,7 @@ func PutArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = db.Exec(
-		`UPDATE public.articles SET updated_at=$1, title=$2, slug=$3, description=$4, author=$5, status=$6, content=$7 WHERE id = $8`,
+		`UPDATE articles SET updated_at=$1, title=$2, slug=$3, description=$4, author=$5, status=$6, content=$7 WHERE id = $8`,
 		time.Now().Format(time.RFC3339), title, slug, description, author, status, content, id)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to update article: %v", err), http.StatusInternalServerError)
@@ -115,7 +115,7 @@ func PostArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err := db.Exec(
-		`INSERT INTO public.articles (created_at, title, slug, description, author, status, content) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+		`INSERT INTO articles (created_at, title, slug, description, author, status, content) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
 		time.Now().Format(time.RFC3339), title, slug, description, author, status, content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to post article: %v", err), http.StatusInternalServerError)
@@ -145,7 +145,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	var (
 		query string = fmt.Sprintf(`
 			SELECT id, created_at, updated_at, title, slug, description, author, status 
-			FROM public.articles
+			FROM articles
 			WHERE status = 'published'
 			ORDER BY created_at DESC
 			LIMIT %d OFFSET %d`, ARTICLES_LIMIT, offset) 
@@ -176,7 +176,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 
 			query = fmt.Sprintf(`
 				SELECT id, created_at, updated_at, title, slug, description, author, status 
-				FROM public.articles
+				FROM articles
 				ORDER BY created_at DESC
 				LIMIT %d OFFSET %d`, ARTICLES_LIMIT, offset)
 			isAdmin = true
