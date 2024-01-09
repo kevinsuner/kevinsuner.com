@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"fmt"
 	"html/template"
 	"log"
@@ -29,11 +28,8 @@ var templateFuncs = template.FuncMap{
 	}}
 
 func init() {
-	envFlag := flag.String("env", "dev", "(dev, prod)")
-	flag.Parse()
-
 	var err error
-	if *envFlag == "dev" {
+	if os.Getenv("ENV") == "dev" {
 		err = godotenv.Load()
 		if err != nil {
 			log.Fatalf("[ERROR] failed to load .env file: %v\n", err)
