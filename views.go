@@ -23,7 +23,7 @@ func ViewArticle(w http.ResponseWriter, r *http.Request) {
 
 	var article Article
 	err := db.QueryRow(
-		`SELECT created_at, updated_at, title, description, author, status, content FROM articles WHERE slug = $1`, slug).Scan(
+		`SELECT created_at, updated_at, title, description, author, status, content FROM public.articles WHERE slug = $1`, slug).Scan(
 		&article.CreatedAt,
 		&article.UpdatedAt,
 		&article.Title,
@@ -85,7 +85,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 	var article Article
 	err = db.QueryRow(
-		`SELECT id, title, slug, description, author, status, content FROM articles WHERE id = $1`, id).Scan(
+		`SELECT id, title, slug, description, author, status, content FROM public.articles WHERE id = $1`, id).Scan(
 		&article.ID,
 		&article.Title,
 		&article.Slug,
@@ -195,7 +195,7 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 
 	var pages int
 	err = db.QueryRow(fmt.Sprintf(`
-		SELECT COUNT(id) / %d as pages FROM articles`, ARTICLES_LIMIT)).Scan(&pages)
+		SELECT COUNT(id) / %d as pages FROM public.articles`, ARTICLES_LIMIT)).Scan(&pages)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
 		return
@@ -227,7 +227,7 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 
 func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query(`
-		SELECT title, content, link, image, caption FROM projects ORDER BY id ASC`)
+		SELECT title, content, link, image, caption FROM public.projects ORDER BY id ASC`)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to get projects: %v", err), http.StatusInternalServerError)
 		return
@@ -294,7 +294,7 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 func AboutPage(w http.ResponseWriter, r *http.Request) {
 	var content string
 	err := db.QueryRow(
-		`SELECT content FROM pages WHERE title = 'about'`).Scan(&content)
+		`SELECT content FROM public.pages WHERE title = 'about'`).Scan(&content)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to get page: %v", err), http.StatusInternalServerError)
 		return
@@ -340,7 +340,7 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 func HomePage(w http.ResponseWriter, r *http.Request) {
 	var pages int
 	err := db.QueryRow(fmt.Sprintf(`
-		SELECT COUNT(id) / %d as pages FROM articles WHERE status = 'published'`, ARTICLES_LIMIT)).Scan(&pages)
+		SELECT COUNT(id) / %d as pages FROM public.articles WHERE status = 'published'`, ARTICLES_LIMIT)).Scan(&pages)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
 		return
