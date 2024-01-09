@@ -53,6 +53,7 @@ a {
 .btn-primary:focus {
     color: black !important;
     background-color: #00ADB5 !important;
+    font-family: Monospace !important;
     border-color: #00ADB5 !important;
     border-radius: 0 !important;
 }
