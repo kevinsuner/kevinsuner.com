@@ -53,5 +53,5 @@ func main() {
 	InitViews(mux)
 	
 	log.Printf("[INFO] started http server at port %s\n", os.Getenv("PORT"))
-	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("PORT")), mux)
+	http.ListenAndServe(":"+os.Getenv("PORT"), mux)
 }
