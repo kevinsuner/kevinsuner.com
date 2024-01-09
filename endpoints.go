@@ -160,7 +160,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if val {
-			cookie, err := r.Cookie("simple_stack_token")
+			cookie, err := r.Cookie("admin_token")
 			if errors.Is(err, http.ErrNoCookie) {
 				http.Error(w, fmt.Sprintf("failed to authenticate: %v", err), http.StatusUnauthorized)
 				return
@@ -169,7 +169,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			if cookie.Value != os.Getenv("SIMPLE_STACK_TOKEN") {
+			if cookie.Value != os.Getenv("ADMIN_TOKEN") {
 				http.Error(w, fmt.Sprintf("failed to authenticate: %v", invalidToken), http.StatusUnauthorized)
 				return
 			}
@@ -245,8 +245,8 @@ func Authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie := http.Cookie{}
-	cookie.Name = "simple_stack_token"
-	cookie.Value = os.Getenv("SIMPLE_STACK_TOKEN")
+	cookie.Name = "admin_token"
+	cookie.Value = os.Getenv("ADMIN_TOKEN")
 	cookie.Expires = time.Now().Add(time.Hour * 1)
 	cookie.Secure = true
 	cookie.HttpOnly = true

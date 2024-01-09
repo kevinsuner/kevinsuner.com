@@ -61,7 +61,7 @@ func ViewArticle(w http.ResponseWriter, r *http.Request) {
 			Author: article.Author,
 			Type: "article",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: fmt.Sprintf("%s | SIMPLEstack", article.Title),
+			Title: fmt.Sprintf("%s | Kevin Suñer", article.Title),
 			CreatedAt: article.CreatedAt.String,
 			UpdatedAt: article.UpdatedAt.String,},
 		Article: article,
@@ -143,7 +143,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 func AdminDashboard(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("simple_stack_token")
+	cookie, err := r.Cookie("admin_token")
 	if errors.Is(err, http.ErrNoCookie) {
 		t, err := template.New("login").ParseFiles(
 			filepath.Join("views", "layouts", "admin_header.tmpl"),
@@ -170,7 +170,7 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if cookie.Value != os.Getenv("SIMPLE_STACK_TOKEN") {
+	if cookie.Value != os.Getenv("ADMIN_TOKEN") {
 		t, err := template.New("login").ParseFiles(
 			filepath.Join("views", "layouts", "admin_header.tmpl"),
 			filepath.Join("views", "layouts", "navbar.tmpl"),
@@ -279,7 +279,7 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Projects | SIMPLEstack"},
+			Title: "Projects | Kevin Suñer"},
 		Projects: projects}
 
 	if err = t.Execute(&buf, templateData); err != nil {
@@ -325,7 +325,7 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "About | SIMPLEstack"},
+			Title: "About | Kevin Suñer"},
 		HTML: template.HTML(html)}
 
 	if err = t.Execute(&buf, templateData); err != nil {
@@ -364,7 +364,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Home | SIMPLEstack"},
+			Title: "Home | Kevin Suñer"},
 		Pages: pages}
 
 	if err = t.Execute(&buf, templateData); err != nil {

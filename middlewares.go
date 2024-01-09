@@ -11,7 +11,7 @@ var invalidToken error = errors.New("invalid token")
 
 func CheckCookie(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cookie, err := r.Cookie("simple_stack_token")
+		cookie, err := r.Cookie("admin_token")
 		if errors.Is(err, http.ErrNoCookie) {
 			http.Error(w, fmt.Sprintf("failed to authenticate: %v", err), http.StatusUnauthorized)
 			return
@@ -20,7 +20,7 @@ func CheckCookie(next http.Handler) http.Handler {
 			return
 		}
 
-		if cookie.Value != os.Getenv("SIMPLE_STACK_TOKEN") {
+		if cookie.Value != os.Getenv("ADMIN_TOKEN") {
 			http.Error(w, fmt.Sprintf("failed to authenticate: %v", invalidToken), http.StatusUnauthorized)
 			return
 		}
