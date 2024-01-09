@@ -275,11 +275,11 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	var buf bytes.Buffer
 	templateData := TemplateData{
 		Meta: Meta{
-			Description: "unimplemented!",
+			Description: "This is a list of personal programming-related projects I've worked on my free time. Most of them are still being maintained, but some get more attention than others as my interests vary over time.",
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Home | SIMPLEstack"},
+			Title: "Projects | SIMPLEstack"},
 		Projects: projects}
 
 	if err = t.Execute(&buf, templateData); err != nil {
@@ -321,11 +321,11 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 	buf = bytes.Buffer{}
 	templateData := TemplateData{
 		Meta: Meta{
-			Description: "unimplemented!",
+			Description: "Kevin is a software engineer working on stuff such as distributed systems, identity management and developer experience. He has been programming since the late 2000s after failing to cheat on a videogame called Lineage II.",
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Home | SIMPLEstack"},
+			Title: "About | SIMPLEstack"},
 		HTML: template.HTML(html)}
 
 	if err = t.Execute(&buf, templateData); err != nil {
@@ -360,7 +360,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	var buf bytes.Buffer
 	templateData := TemplateData{
 		Meta: Meta{
-			Description: "unimplemented!",
+			Description: "Kevin is a software engineer working on stuff such as distributed systems, identity management and developer experience. He has been programming since the late 2000s after failing to cheat on a videogame called Lineage II.",
 			Author: "Kevin Suñer",
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
