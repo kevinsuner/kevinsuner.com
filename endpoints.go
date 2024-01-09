@@ -78,10 +78,10 @@ func PutArticle(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(fmt.Sprintf(`
-	<div class="alert alert-success" role="alert">
+	<div class="alert alert-primary" role="alert">
 		<p>¡Hey! The article has been successfully edited</p>
 		<hr>
-		<a href="/%s" class="link-success mb-0">Back to Dashboard &#x2192;</a>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
 	</div>`, os.Getenv("ADMIN_URL"))))
 }
 
@@ -124,10 +124,10 @@ func PostArticle(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(fmt.Sprintf(`
-	<div class="alert alert-success" role="alert">
+	<div class="alert alert-primary" role="alert">
 		<p>¡Hooray! A new article has been created</p>
 		<hr>
-		<a href="/%s" class="link-success mb-0">Back to Dashboard &#x2192;</a>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
 	</div>`, os.Getenv("ADMIN_URL"))))
 }
 
