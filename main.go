@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"fmt"
 	"html/template"
 	"log"
@@ -29,9 +30,15 @@ var templateFuncs = template.FuncMap{
 	}}
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("[ERROR] failed to load .env file: %v\n", err)
+	envFlag := flag.String("env", "dev", "(dev, prod)")
+	flag.Parse()
+
+	var err error
+	if *envFlag == "dev" {
+		err = godotenv.Load()
+		if err != nil {
+			log.Fatalf("[ERROR] failed to load .env file: %v\n", err)
+		}
 	}
 
 	db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
