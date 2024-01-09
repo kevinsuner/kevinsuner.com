@@ -58,3 +58,23 @@ a {
     border-radius: 0 !important;
 }
 
+.btn-outline-primary,
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn-outline-primary:visited,
+.btn-outline-primary:focus {
+    color: #00ADB5 !important;
+    background-color: transparent !important;
+    font-family: Monospace !important;
+    border-color: #00ADB5 !important;
+    border-radius: 0 !important;
+}
+
+/* Alerts */
+
+.alert-primary {
+    color: #00ADB5 !important;
+    background-color: rgba(0, 173, 181, 0.1) !important;
+    border-color: #00ADB5 !important;
+    border-radius: 0 !important;
+}
