@@ -13,10 +13,9 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const ARTICLES_LIMIT int = 3
+const ARTICLES_LIMIT int = 5
 
 var db *sql.DB
-
 var templateFuncs = template.FuncMap{
 	"Iterate": func(count int) []int {
 		var numbers []int
@@ -26,7 +25,7 @@ var templateFuncs = template.FuncMap{
 		return numbers
 	},
 	"Offset": func(num int) int {
-		return num * ARTICLES_LIMIT
+		return num * ARTICLES_LIMIT 
 	}}
 
 func init() {
