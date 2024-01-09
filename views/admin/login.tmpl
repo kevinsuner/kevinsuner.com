@@ -2,18 +2,21 @@
 {{template "admin_header" .}}
 {{template "navbar" .}}
 <div class="container">
-	<div id="login-form" class="card mt-5">
+	<div class="mt-5">
+		<h4 class="color-blue-primary font-monoid-bold">Admin dashboard</h4>
+	</div>
+	<div id="login-form" class="card background-dark-primary rounded-0 border-0 shadow p-3 mt-5">
 		<div class="card-body">
 			<form hx-post="/authenticate">
 				<div class="mb-3">
-					<label for="username-input" class="form-label">Username</label>
-					<input name="username" type="text" class="form-control" id="username-input">
+					<label for="username-input" class="form-label font-monospace">Username</label>
+					<input name="username" type="text" class="form-control font-monospace" id="username-input">
 				</div>
 				<div class="mb-3">
-					<label for="password-input" class="form-label">Password</label>
-					<input name="password" type="password" class="form-control" id="password-input">
+					<label for="password-input" class="form-label font-monospace">Password</label>
+					<input name="password" type="password" class="form-control font-monospace" id="password-input">
 				</div>
-				<button type="submit" class="btn btn-success">Login</button>
+				<button type="submit" class="btn btn-primary">Login</button>
 			</form>
 		</div>
 	</div>
