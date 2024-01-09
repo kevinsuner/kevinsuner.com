@@ -3,24 +3,32 @@
 {{template "navbar" .}}
 <div class="container">
 	<div class="mt-5">
+		<h4 class="color-blue-primary font-monoid-bold">Edit article</h4>
+	</div>
+	<div class="mt-5">
 		<div id="edit-article-alert"></div>
-		<div id="edit-article-form" class="card mt-3">
+		<div id="edit-article-form" class="card background-dark-primary rounded-0 border-0 shadow p-3 mt-3">
 			<div class="card-body">
 				<form hx-put="/put/article?id={{$.ID}}" hx-target="#edit-article-alert" hx-swap="innerHTML">
 					<div class="mb-3">
-						<input name="title" type="text" value="{{$.Title}}" class="form-control">
+						<label for="title-input" class="form-label font-monospace">Title</label>
+						<input name="title" type="text" value="{{$.Title}}" class="form-control font-monospace" id="title-input">
 					</div>
 					<div class="mb-3">
-						<input name="slug" type="text" value="{{$.Slug}}" class="form-control">
+						<label for="slug-input" class="form-label font-monospace">Slug</label>
+						<input name="slug" type="text" value="{{$.Slug}}" class="form-control font-monospace" id="slug-input">
 					</div>
 					<div class="mb-3">
-						<input name="description" type="text" value="{{$.Description}}" class="form-control">
+						<label for="description-input" class="form-label font-monospace">Description</label>
+						<input name="description" type="text" value="{{$.Description}}" class="form-control font-monospace" id="description-input">
 					</div>
 					<div class="mb-3">
-						<input name="author" type="text" value="{{$.Author}}" class="form-control">
+						<label for="author-input" class="form-label font-monospace">Author</label>
+						<input name="author" type="text" value="{{$.Author}}" class="form-control font-monospace" id="author-input">
 					</div>
 					<div class="mb-3">
-						<select name="status" class="form-select">
+						<label for="status-select" class="form-label font-monospace">Status</label>
+						<select name="status" class="form-select font-monospace" id="status-select">
 							{{if eq $.Status "unpublished"}}
 							<option value="unpublished" selected>Unpublished</option>
 							<option value="published">Published</option>
@@ -31,9 +39,10 @@
 						</select>
 					</div>
 					<div class="mb-3">
-						<textarea name="content" class="form-control" style="min-height: 250px; max-height: 250px;">{{$.Content}}</textarea>
+						<label for="content-textarea" class="form-label font-monospace">Content</label>
+						<textarea name="content" class="form-control font-monospace" id="content-textarea" style="min-height: 250px; max-height: 250px;">{{$.Content}}</textarea>
 					</div>
-					<button type="submit" class="btn btn-success">Edit article</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 			</div>
 		</div>
