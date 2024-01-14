@@ -219,7 +219,7 @@ func Authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Form.Get("username") != os.Getenv("ADMIN_NAME") ||
+	if r.Form.Get("username") != os.Getenv("ADMIN_USER") ||
 		r.Form.Get("password") != os.Getenv("ADMIN_PASS") {
 		http.Error(w, fmt.Sprintf("failed to authenticate: %v", errInvalidCredentials), http.StatusUnauthorized)
 		return
