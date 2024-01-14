@@ -56,19 +56,19 @@ func ViewArticle(w http.ResponseWriter, r *http.Request) {
 	html := buf.String() 
 
 	buf = bytes.Buffer{}
-	templateData := TemplateData{
-		Meta: Meta{
+	if err = t.Execute(&buf, map[string]interface{}{
+		"meta": Meta{
 			Description: article.Description,
 			Author: article.Author,
 			Type: "article",
-			URL: fmt.Sprintf("https://%s", r.Host),
+			URL: "https://"+r.Host,
 			Title: fmt.Sprintf("%s | Kevin Suñer", article.Title),
 			CreatedAt: article.CreatedAt.String,
-			UpdatedAt: article.UpdatedAt.String,},
-		Article: article,
-		HTML: template.HTML(html)}
-
-	if err = t.Execute(&buf, templateData); err != nil {
+			UpdatedAt: article.UpdatedAt.String,
+		},
+		"article": article,
+		"html": template.HTML(html),
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -111,7 +111,9 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	if err = t.Execute(&buf, article); err != nil {
+	if err = t.Execute(&buf, map[string]interface{}{
+		"article": article,
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -214,9 +216,9 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	templateData := TemplateData{Pages: int(math.Ceil(pages))}
-
-	if err = t.Execute(&buf, templateData); err != nil {
+	if err = t.Execute(&buf, map[string]interface{}{
+		"pages": int(math.Ceil(pages)),
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -274,16 +276,16 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	templateData := TemplateData{
-		Meta: Meta{
+	if err = t.Execute(&buf, map[string]interface{}{
+		"meta": Meta{
 			Description: "This is a list of personal programming-related projects I've worked on my free time. Most of them are still being maintained, but some get more attention than others as my interests vary over time.",
 			Author: "Kevin Suñer",
 			Type: "website",
-			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Projects | Kevin Suñer"},
-		Projects: projects}
-
-	if err = t.Execute(&buf, templateData); err != nil {
+			URL: "https://"+r.Host,
+			Title: "Projects | Kevin Suñer",
+		},
+		"projects": projects,
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -320,16 +322,16 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 	html := buf.String()
 
 	buf = bytes.Buffer{}
-	templateData := TemplateData{
-		Meta: Meta{
+	if err = t.Execute(&buf, map[string]interface{}{
+		"meta": Meta{
 			Description: "Kevin is a software engineer working on stuff such as distributed systems, identity management and developer experience. He has been programming since the late 2000s after failing to cheat on a videogame called Lineage II.",
 			Author: "Kevin Suñer",
 			Type: "website",
-			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "About | Kevin Suñer"},
-		HTML: template.HTML(html)}
-
-	if err = t.Execute(&buf, templateData); err != nil {
+			URL: "https://"+r.Host,
+			Title: "About | Kevin Suñer",
+		},
+		"html": template.HTML(html),
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -359,16 +361,16 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	templateData := TemplateData{
-		Meta: Meta{
+	if err = t.Execute(&buf, map[string]interface{}{
+		"meta": Meta{
 			Description: "Kevin is a software engineer working on stuff such as distributed systems, identity management and developer experience. He has been programming since the late 2000s after failing to cheat on a videogame called Lineage II.",
 			Author: "Kevin Suñer",
 			Type: "website",
-			URL: fmt.Sprintf("https://%s", r.Host),
-			Title: "Home | Kevin Suñer"},
-		Pages: int(math.Ceil(pages))}
-
-	if err = t.Execute(&buf, templateData); err != nil {
+			URL: "https://"+r.Host,
+			Title: "Home | Kevin Suñer",
+		},
+		"pages": int(math.Ceil(pages)),
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}

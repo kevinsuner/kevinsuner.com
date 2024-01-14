@@ -1,6 +1,6 @@
-{{define "about"}}
-{{template "header" .}}
-{{template "navbar" .}}
+{{ define "about" }}
+{{ template "header" . }}
+{{ template "navbar" . }}
 <div class="container">
 	<div class="mt-5">
 		<h4 class="color-blue-primary font-monoid-bold">About</h4>
@@ -8,9 +8,9 @@
 	<div class="mt-5">
 		<p>
 			<img src="/static/img/profile.jpeg" class="float-end ms-4 mb-4" style="width: 150px; height: 150px; border: 16px solid white;">
-			{{$.HTML}}
+			{{ .html }}
 		</p>
 	</div>
 </div>
-{{template "footer" .}}
-{{end}}
+{{ template "footer" . }}
+{{ end }}

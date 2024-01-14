@@ -1,6 +1,6 @@
-{{define "projects"}}
-{{template "header" .}}
-{{template "navbar" .}}
+{{ define "projects" }}
+{{ template "header" . }}
+{{ template "navbar" . }}
 <div class="container">
 	<div class="mt-5">
 		<h4 class="color-blue-primary font-monoid-bold">Projects</h4>
@@ -10,22 +10,22 @@
 		</p>
 	</div>
 	<div class="mt-5">
-		{{range .Projects}}
+		{{ range .projects }}
 		<div class="mb-4">
 			<h6 class="font-monoid-regular">
-				<a href="{{.Link}}" class="color-blue-primary">{{.Title}}</a>
+				<a href="{{ .Link }}" class="color-blue-primary">{{ .Title }}</a>
 			</h6>
-			{{.HTML}}
+			{{ .HTML }}
 			<figure class="figure text-center">
-				<img src="/static/img/{{.Image}}" class="figure-img img-fluid w-75" style="border: 16px solid white;">
-				<figcaption class="figure-caption font-monospace text-secondary mt-3">{{.Caption}}</figcaption>
+				<img src="/static/img/{{ .Image }}" class="figure-img img-fluid w-75" style="border: 16px solid white;">
+				<figcaption class="figure-caption font-monospace text-secondary mt-3">{{ .Caption }}</figcaption>
 			</figure>
 		</div>
-		{{else}}
+		{{ else }}
 		<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
 		<h5 class="font-monospace">Looks like there are no projects to show yet :(</h5>
-		{{end}}
+		{{ end }}
 	</div>
 </div>
-{{template "footer" .}}
-{{end}}
+{{ template "footer" . }}
+{{ end }}

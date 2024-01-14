@@ -1,6 +1,6 @@
-{{define "dashboard"}}
-{{template "admin_header" .}}
-{{template "navbar" .}}
+{{ define "dashboard" }}
+{{ template "admin_header" . }}
+{{ template "navbar" . }}
 <div class="container">
 	<div class="row mt-5">
 		<div class="col-7">
@@ -16,18 +16,18 @@
 			<h5 class="font-monospace">Looks like there are no articles to show yet :(</h5>
 		</div>
 	</div>
-	{{if gt $.Pages 1}}
+	{{ if gt .pages 1 }}
 	<div class="btn-toolbar" role="toolbar">
-		{{range $i := Iterate $.Pages}}
+		{{ range $i := Iterate .pages }}
 		<div class="btn-group me-2" role="group">
-			{{$offset := Offset $i}}
-			<button type="button" class="btn btn-primary font-monospace" hx-get="/get/articles?admin=true&offset={{$offset}}" hx-target="#articles" hx-swap="innerHTML">
-				{{len (printf "a%*s" $i "")}}
+			{{ $offset := Offset $i }}
+			<button type="button" class="btn btn-primary font-monospace" hx-get="/get/articles?admin=true&offset={{ $offset }}" hx-target="#articles" hx-swap="innerHTML">
+				{{ len (printf "a%*s" $i "") }}
 			</button>
 		</div>
-		{{end}}
+		{{ end }}
 	</div>
-	{{end}}
+	{{ end }}
 </div>
-{{template "footer" .}}
-{{end}}
+{{ template "footer" . }}
+{{ end }}

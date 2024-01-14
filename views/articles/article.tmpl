@@ -1,14 +1,14 @@
-{{define "article"}}
-{{template "header" .}}
-{{template "navbar" .}}
+{{ define "article" }}
+{{ template "header" . }}
+{{ template "navbar" . }}
 <div class="container">
 	<div class="mt-5">
-		<h4 class="color-blue-primary font-monoid-bold">{{$.Article.Title}}</h4>
+		<h4 class="color-blue-primary font-monoid-bold">{{ .article.Title }}</h4>
 		<p class="font-monospace text-secondary mb-3">
-			{{$.Article.CreatedAt.String}} {{if $.Article.UpdatedAt.String}}| Edited on {{$.Article.UpdatedAt.String}}{{end}}
+			{{ .article.CreatedAt.String }} {{if .article.UpdatedAt.String }}| Edited on {{ .article.UpdatedAt.String }}{{ end }}
 		</p>
-		{{$.HTML}}
+		{{ .html }}
 	</div>
 </div>
-{{template "footer" .}}
-{{end}}
+{{ template "footer" . }}
+{{ end }}

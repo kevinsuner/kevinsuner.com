@@ -201,11 +201,10 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	templateData := TemplateData{
-		Articles: articles,
-		IsAdmin: isAdmin}
-
-	if err = t.Execute(&buf, templateData); err != nil {
+	if err = t.Execute(&buf, map[string]interface{}{
+		"articles": articles,
+		"is_admin": isAdmin,
+	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
