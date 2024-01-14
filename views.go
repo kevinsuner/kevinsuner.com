@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -193,9 +194,9 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var pages int
+	var pages float64
 	err = db.QueryRow(fmt.Sprintf(`
-		select count(id) / %d as pages from articles`, ARTICLES_LIMIT)).Scan(&pages)
+		select count(id)::float / %d as pages from articles`, ARTICLES_LIMIT)).Scan(&pages)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
 		return
@@ -213,7 +214,7 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	templateData := TemplateData{Pages: pages}
+	templateData := TemplateData{Pages: int(math.Ceil(pages))}
 
 	if err = t.Execute(&buf, templateData); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
@@ -338,9 +339,9 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
-	var pages int
+	var pages float64
 	err := db.QueryRow(fmt.Sprintf(`
-		select count(id) / %d as pages from articles where status = 'published'`, ARTICLES_LIMIT)).Scan(&pages)
+		select count(id)::float / %d as pages from articles where status = 'published'`, ARTICLES_LIMIT)).Scan(&pages)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
 		return
@@ -365,7 +366,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 			Type: "website",
 			URL: fmt.Sprintf("https://%s", r.Host),
 			Title: "Home | Kevin Suñer"},
-		Pages: pages}
+		Pages: int(math.Ceil(pages))}
 
 	if err = t.Execute(&buf, templateData); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
