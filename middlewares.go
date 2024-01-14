@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var invalidToken error = errors.New("invalid token")
+var errInvalidToken error = errors.New("invalid token")
 
 func CheckCookie(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +21,7 @@ func CheckCookie(next http.Handler) http.Handler {
 		}
 
 		if cookie.Value != os.Getenv("ADMIN_TOKEN") {
-			http.Error(w, fmt.Sprintf("failed to authenticate: %v", invalidToken), http.StatusUnauthorized)
+			http.Error(w, fmt.Sprintf("failed to authenticate: %v", errInvalidToken), http.StatusUnauthorized)
 			return
 		}
 

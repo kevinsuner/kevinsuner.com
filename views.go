@@ -17,7 +17,7 @@ import (
 func ViewArticle(w http.ResponseWriter, r *http.Request) {
 	slug := strings.TrimPrefix(r.URL.Path, "/article/")
 	if len(slug) < 0 {
-		http.Error(w, fmt.Sprintf("failed to trim slug: %v", emptyString), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("failed to trim slug: %v", errEmptyString), http.StatusBadRequest)
 		return
 	}
 
