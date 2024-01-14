@@ -36,6 +36,14 @@ func checkEmptyString(str ...string) error {
 }
 
 func main() {
+	if os.Getenv("ENV") == "dev" {
+		err := godotenv.Load()
+		if err != nil {
+			fmt.Fprintln(os.Stdout, err.Error())
+			os.Exit(1)
+		}
+	}
+
 	err := checkEmptyString(
 		os.Getenv("PORT"),
 		os.Getenv("ADMIN_URL"),
@@ -49,14 +57,6 @@ func main() {
 	if err != nil {
 		fmt.Fprintln(os.Stdout, errEmptyString.Error())
 		os.Exit(1)
-	}
-
-	if os.Getenv("ENV") == "dev" {
-		err = godotenv.Load()
-		if err != nil {
-			fmt.Fprintln(os.Stdout, err.Error())
-			os.Exit(1)
-		}
 	}
 
 	db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
