@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 
@@ -27,37 +26,54 @@ var templateFuncs = template.FuncMap{
 		return num * ARTICLES_LIMIT 
 	}}
 
-func init() {
-	var err error
-	if os.Getenv("ENV") == "dev" {
-		err = godotenv.Load()
-		if err != nil {
-			log.Fatalf("[ERROR] failed to load .env file: %v\n", err)
+func checkEmptyString(str ...string) error {
+	for _, s := range str {
+		if len(s) == 0 {
+			return emptyString
 		}
-
-		db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
-			os.Getenv("PQ_USER"), os.Getenv("PQ_PASS"), os.Getenv("PQ_IP"), os.Getenv("PQ_NAME")))
-		if err != nil {
-			log.Fatalf("[ERROR] failed to initialize db: %v\n", err)
-		}
-	
-		log.Println("[INFO] successfully connected to db")
-		return
 	}
-
-	db, err = sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if err != nil {
-		log.Fatalf("[ERROR] failed to initialize db: %v\n", err)
-	}
+	return nil
 }
 
 func main() {
+	err := checkEmptyString(
+		os.Getenv("PORT"),
+		os.Getenv("ADMIN_URL"),
+		os.Getenv("ADMIN_TOKEN"),
+		os.Getenv("ADMIN_USER"),
+		os.Getenv("ADMIN_PASS"),
+		os.Getenv("PG_USER"),
+		os.Getenv("PG_PASS"),
+		os.Getenv("PG_HOST"),
+		os.Getenv("PG_NAME"))
+	if err != nil {
+		fmt.Fprintln(os.Stdout, emptyString.Error())
+		os.Exit(1)
+	}
+
+	if os.Getenv("ENV") == "dev" {
+		err = godotenv.Load()
+		if err != nil {
+			fmt.Fprintln(os.Stdout, err.Error())
+			os.Exit(1)
+		}
+	}
+
+	db, err = sql.Open("postgres", fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=disable",
+		os.Getenv("PG_USER"),
+		os.Getenv("PG_PASS"),
+		os.Getenv("PG_HOST"),
+		os.Getenv("PG_NAME")))
+	if err != nil {
+		fmt.Fprintln(os.Stdout, err.Error())
+		os.Exit(1)
+	}
+
 	mux := http.NewServeMux()
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	
 	InitEndpoints(mux)
 	InitViews(mux)
 	
-	log.Printf("[INFO] started http server at port %s\n", os.Getenv("PORT"))
 	http.ListenAndServe(":"+os.Getenv("PORT"), mux)
 }
