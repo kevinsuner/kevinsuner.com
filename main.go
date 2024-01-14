@@ -29,7 +29,7 @@ var templateFuncs = template.FuncMap{
 func checkEmptyString(str ...string) error {
 	for _, s := range str {
 		if len(s) == 0 {
-			return emptyString
+			return errEmptyString
 		}
 	}
 	return nil
@@ -47,7 +47,7 @@ func main() {
 		os.Getenv("PG_HOST"),
 		os.Getenv("PG_NAME"))
 	if err != nil {
-		fmt.Fprintln(os.Stdout, emptyString.Error())
+		fmt.Fprintln(os.Stdout, errEmptyString.Error())
 		os.Exit(1)
 	}
 
