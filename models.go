@@ -17,6 +17,14 @@ type Article struct {
 	Content string
 }
 
+type Page struct {
+	ID uint
+	CreatedAt sql.NullString
+	UpdatedAt sql.NullString
+	Title string
+	Content string
+}
+
 type Meta struct {
 	Description string
 	Author string

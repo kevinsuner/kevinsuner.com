@@ -1,0 +1,13 @@
+{{ define "pages" }}
+	{{ range .pages }}
+	<div class="mb-4">
+		<h6 class="font-monoid-regular">
+			<a href="/edit/page?id={{ .ID }}" class="color-blue-primary">{{ .Title }}</a>
+		</h6>
+		<hr/>
+	</div>
+	{{ else }}
+	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+	<h5 class="font-monospace">Looks like there are no pages to show yet :(</h5>
+	{{ end }}
+{{ end }}

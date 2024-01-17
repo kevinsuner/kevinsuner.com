@@ -2,6 +2,7 @@
 {{ template "admin_header" . }}
 {{ template "navbar" . }}
 <div class="container">
+	<!--- Articles section -->
 	<div class="row mt-5">
 		<div class="col-7">
 			<h4 class="color-blue-primary font-monoid-bold">All articles</h4>
@@ -28,6 +29,22 @@
 		{{ end }}
 	</div>
 	{{ end }}
+
+	<!--- Pages section -->
+	<div class="row mt-5">
+		<div class="col-7">
+			<h4 class="color-blue-primary font-monoid-bold">All pages</h4>
+		</div>
+		<div class="col-5">
+			<a href="/create/page" class="btn btn-primary font-monospace float-end">Create page</a>
+		</div>
+	</div>
+	<div id="pages" class="mt-5">
+		<div hx-get="/get/pages" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+			<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+			<h5 class="font-monospace">Looks like there are no pages to show yet :(</h5>
+		</div>
+	</div>
 </div>
 {{ template "footer" . }}
 {{ end }}

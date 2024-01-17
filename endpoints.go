@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"database/sql"
 	"errors"
 	"fmt"
 	"html/template"
@@ -20,6 +19,46 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func GetPages(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query(`select id, title from "pages"`)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get pages: %v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var pages []Page
+	for rows.Next() {
+		var page Page
+		if err = rows.Scan(&page.ID, &page.Title); err != nil {
+			http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
+			return
+		}
+		pages = append(pages, page)
+	}
+	if err = rows.Err(); err != nil {
+		http.Error(w, fmt.Sprintf("failed while iterating: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("pages").ParseFiles(filepath.Join("views", "pages", "pages.tmpl"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, map[string]interface{}{
+		"pages": pages,
+	}); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func GetPage(w http.ResponseWriter, r *http.Request) {
 	if len(r.URL.Query().Get("title")) <= 0 {
 		http.Error(w, fmt.Sprintf("failed to parse title: %v", errEmptyString), http.StatusBadRequest)
@@ -28,28 +67,20 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 
 	var content string
 	err := db.QueryRow(
-		`select content from pages where title = $1`, r.URL.Query().Get("title")).Scan(&content)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		`select content from "pages" where title = $1`, r.URL.Query().Get("title")).Scan(&content)
+	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to get page: %v", err), http.StatusInternalServerError)
 		return
 	}
 
-	if len(content) > 0 {
-		var buf bytes.Buffer
-		if err = goldmark.Convert([]byte(content), &buf); err != nil {
-			http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write(buf.Bytes())
+	var buf bytes.Buffer
+	if err = goldmark.Convert([]byte(content), &buf); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte(`
-	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
-	<h5 class="font-monospace">Looks like there is no information to show yet :(</h5>`))
+	w.Write(buf.Bytes())
 }
 
 func DeleteArticle(w http.ResponseWriter, r *http.Request) {
@@ -276,6 +307,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/post/article", CheckCookie(http.HandlerFunc(PostArticle)))
 	mux.Handle("/put/article", CheckCookie(http.HandlerFunc(PutArticle)))
 	mux.Handle("/delete/article", CheckCookie(http.HandlerFunc(DeleteArticle)))
+	mux.Handle("/get/pages", CheckCookie(http.HandlerFunc(GetPages)))
 
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)
