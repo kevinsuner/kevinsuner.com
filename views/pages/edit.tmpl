@@ -19,6 +19,23 @@
 						<textarea name="content" class="form-control font-monospace" id="content-textarea" style="min-height: 250px; max-height: 250px;">{{ .page.Content }}</textarea>
 					</div>
 					<button type="submit" class="btn btn-primary">Submit</button>
+
+					<button type="button" class="btn btn-outline-primary float-end" data-bs-toggle="modal" data-bs-target="#delete-page-modal">Delete</button>
+					<div class="modal fade" id="delete-page-modal" tabindex="-1"> 
+						<div class="modal-dialog shadow">
+							<div class="modal-content background-dark-primary rounded-0 border-0">
+								<div class="modal-body">
+									<p class="mb-0">You're about to delete <b>"{{ .page.Title }}"</b></p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary" hx-delete="/delete/page?id={{ .ID }}">
+										I want to delete this page
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>

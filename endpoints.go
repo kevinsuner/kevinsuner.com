@@ -19,6 +19,22 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func DeletePage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(`delete from "pages" where id = $1`, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to delete page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
+}
+
 func PutPage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -348,6 +364,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/delete/article", CheckCookie(http.HandlerFunc(DeleteArticle)))
 	mux.Handle("/get/pages", CheckCookie(http.HandlerFunc(GetPages)))
 	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
+	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
 
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)
