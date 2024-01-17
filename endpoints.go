@@ -19,6 +19,22 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func DeleteProject(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(`delete from "projects" where id = $1`, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to delete project: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
+}
+
 func PutProject(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -561,6 +577,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
 	mux.Handle("/post/project", CheckCookie(http.HandlerFunc(PostProject)))
 	mux.Handle("/put/project", CheckCookie(http.HandlerFunc(PutProject)))
+	mux.Handle("/delete/project", CheckCookie(http.HandlerFunc(DeleteProject)))
 
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)
