@@ -9,22 +9,11 @@
 			but some get more attention than others as my interests vary over time.
 		</p>
 	</div>
-	<div class="mt-5">
-		{{ range .projects }}
-		<div class="mb-4">
-			<h6 class="font-monoid-regular">
-				<a href="{{ .Link }}" class="color-blue-primary">{{ .Title }}</a>
-			</h6>
-			{{ .HTML }}
-			<figure class="figure text-center">
-				<img src="/static/img/{{ .Image }}" class="figure-img img-fluid w-75" style="border: 16px solid white;">
-				<figcaption class="figure-caption font-monospace text-secondary mt-3">{{ .Caption }}</figcaption>
-			</figure>
+	<div id="projects" class="mt-5">
+		<div hx-get="/get/projects" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+			<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+			<h5 class="font-monospace">Looks like there are no projects to show yet :(</h5>
 		</div>
-		{{ else }}
-		<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
-		<h5 class="font-monospace">Looks like there are no projects to show yet :(</h5>
-		{{ end }}
 	</div>
 </div>
 {{ template "footer" . }}

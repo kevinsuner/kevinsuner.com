@@ -19,6 +19,88 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func GetProjects(w http.ResponseWriter, r *http.Request) {
+	var isAdmin bool
+	if len(r.URL.Query().Get("admin")) > 0 {
+		val, err := strconv.ParseBool(r.URL.Query().Get("admin"))
+		if err != nil {
+			http.Error(w, fmt.Sprintf("failed to parse bool: %v", err), http.StatusBadRequest)
+			return
+		}
+
+		if val {
+			cookie, err := r.Cookie("admin_token")
+			if errors.Is(err, http.ErrNoCookie) {
+				http.Error(w, fmt.Sprintf("failed to authenticate: %v", err), http.StatusUnauthorized)
+				return
+			} else if err != nil {
+				http.Error(w, fmt.Sprintf("failed to get cookie: %v", err), http.StatusInternalServerError)
+				return
+			}
+
+			if cookie.Value != os.Getenv("ADMIN_TOKEN") {
+				http.Error(w, fmt.Sprintf("failed to authenticate: %v", errInvalidToken), http.StatusUnauthorized)
+				return
+			}
+
+			isAdmin = true
+		}
+	}
+
+	rows, err := db.Query(`select id, title, link, image, caption, content from "projects"`)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get projects: %v", err), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var projects []Project
+	for rows.Next() {
+		var project Project
+		if err = rows.Scan(
+			&project.ID,
+			&project.Title,
+			&project.Link,
+			&project.Image,
+			&project.Caption,
+			&project.Content); err != nil {
+			http.Error(w, fmt.Sprintf("failed to scan value: %v", err), http.StatusInternalServerError)
+			return
+		}
+	
+		var buf bytes.Buffer
+		if err = goldmark.Convert([]byte(project.Content), &buf); err != nil {
+			http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		project.HTML = template.HTML(buf.String())
+		projects = append(projects, project)
+	}
+	if err = rows.Err(); err != nil {
+		http.Error(w, fmt.Sprintf("failed while iterating: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("projects").ParseFiles(filepath.Join("views", "projects", "projects.tmpl"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, map[string]interface{}{
+		"projects": projects,
+		"is_admin": isAdmin,
+	}); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func DeletePage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -404,4 +486,5 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.HandleFunc("/authenticate", Authenticate)
 	mux.HandleFunc("/get/articles", GetArticles)
 	mux.HandleFunc("/get/page", GetPage)
+	mux.HandleFunc("/get/projects", GetProjects)
 }

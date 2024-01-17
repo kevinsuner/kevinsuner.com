@@ -25,6 +25,18 @@ type Page struct {
 	Content string
 }
 
+type Project struct {
+	ID uint
+	CreatedAt sql.NullString
+	UpdatedAt sql.NullString
+	Title string
+	Link string
+	Image string
+	Caption string
+	Content string
+	HTML template.HTML
+}
+
 type Meta struct {
 	Description string
 	Author string
@@ -33,15 +45,6 @@ type Meta struct {
 	Title string
 	CreatedAt string
 	UpdatedAt string
-}
-
-type Project struct {
-	Title string
-	Content string
-	Link string
-	Image string
-	Caption string
-	HTML template.HTML
 }
 
 type TemplateData struct {
