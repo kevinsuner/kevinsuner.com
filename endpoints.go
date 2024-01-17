@@ -19,6 +19,42 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func PostProject(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var (
+		title	string = r.Form.Get("title")
+		link	string = r.Form.Get("link")
+		image	string = r.Form.Get("image")
+		caption	string = r.Form.Get("caption")
+		content	string = r.Form.Get("content")
+	)
+
+	if err := checkEmptyString(title, link, image, caption, content); err != nil {
+		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err := db.Exec(
+		`insert into "projects" (created_at, title, link, image, caption, content) values ($1, $2, $3, $4, $5, $6)`,
+		time.Now().Format(time.RFC3339), title, link, image, caption, content)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to post project: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(fmt.Sprintf(`
+	<div class="alert alert-primary" role="alert">
+		<p>¡Hooray! A new project has been created</p>
+		<hr>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
+	</div>`, os.Getenv("ADMIN_URL"))))
+}
+
 func GetProjects(w http.ResponseWriter, r *http.Request) {
 	var isAdmin bool
 	if len(r.URL.Query().Get("admin")) > 0 {
@@ -481,6 +517,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/post/page", CheckCookie(http.HandlerFunc(PostPage)))
 	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
 	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
+	mux.Handle("/post/project", CheckCookie(http.HandlerFunc(PostProject)))
 
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)
