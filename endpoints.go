@@ -141,7 +141,7 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	rows, err := db.Query(`select id, title, link, image, caption, content from "projects"`)
+	rows, err := db.Query(`select id, title, link, image, caption, content from "projects" order by id desc`)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to get projects: %v", err), http.StatusInternalServerError)
 		return
