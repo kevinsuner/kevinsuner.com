@@ -15,6 +15,47 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+func EditPage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var page Page
+	err = db.QueryRow(
+		`select id, title, content from "pages" where id = $1`, id).Scan(
+		&page.ID,
+		&page.Title,
+		&page.Content)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("edit").ParseFiles(
+		filepath.Join("views", "layouts", "admin_header.tmpl"),
+		filepath.Join("views", "layouts", "navbar.tmpl"),
+		filepath.Join("views", "layouts", "footer.tmpl"),
+		filepath.Join("views", "pages", "edit.tmpl"),
+	)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, map[string]interface{}{
+		"page": page,
+	}); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func ViewArticle(w http.ResponseWriter, r *http.Request) {
 	slug := strings.TrimPrefix(r.URL.Path, "/article/")
 	if len(slug) < 0 {
@@ -368,6 +409,7 @@ func InitViews(mux *http.ServeMux) {
 	mux.HandleFunc(fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")), AdminDashboard)
 	mux.Handle("/create/article", CheckCookie(http.HandlerFunc(CreateArticle)))
 	mux.Handle("/edit/article", CheckCookie(http.HandlerFunc(EditArticle)))
+	mux.Handle("/edit/page", CheckCookie(http.HandlerFunc(EditPage)))
 
 	/*** Public ***/
 	mux.HandleFunc("/", HomePage)

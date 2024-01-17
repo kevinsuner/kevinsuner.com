@@ -19,6 +19,45 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func PutPage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if err = r.ParseForm(); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var (
+		title	string = r.Form.Get("title")
+		content	string = r.Form.Get("content")
+	)
+
+	if err = checkEmptyString(title, content); err != nil {
+		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(
+		`update "pages" set updated_at=$1, title=$2, content=$3 where id = $4`,
+		time.Now().Format(time.RFC3339), title, content, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to update page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(fmt.Sprintf(`
+	<div class="alert alert-primary" role="alert">
+		<p>¡Hey! The page has been successfully edited</p>
+		<hr>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
+	</div>`, os.Getenv("ADMIN_URL"))))
+}
+
 func GetPages(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query(`select id, title from "pages"`)
 	if err != nil {
@@ -308,6 +347,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/put/article", CheckCookie(http.HandlerFunc(PutArticle)))
 	mux.Handle("/delete/article", CheckCookie(http.HandlerFunc(DeleteArticle)))
 	mux.Handle("/get/pages", CheckCookie(http.HandlerFunc(GetPages)))
+	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
 
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)

@@ -1,0 +1,28 @@
+{{ define "edit" }}
+{{ template "admin_header" . }}
+{{ template "navbar" . }}
+<div class="container">
+	<div class="mt-5">
+		<h4 class="color-blue-primary font-monoid-bold">Edit page</h4>
+	</div>
+	<div class="mt-5">
+		<div id="edit-page-alert"></div>
+		<div id="edit-page-form" class="card background-dark-primary rounded-0 border-0 shadow p-3 mt-3">
+			<div class="card-body">
+				<form hx-put="/put/page?id={{ .page.ID }}" hx-target="#edit-page-alert" hx-swap="innerHTML">
+					<div class="mb-3">
+						<label for="title-input" class="form-label font-monospace">Title</label>
+						<input name="title" type="text" value="{{ .page.Title }}" class="form-control font-monospace" id="title-input">
+					</div>
+					<div class="mb-3">
+						<label for="content-textarea" class="form-label font-monospace">Content</label>
+						<textarea name="content" class="form-control font-monospace" id="content-textarea" style="min-height: 250px; max-height: 250px;">{{ .page.Content }}</textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{ template "footer" . }}
+{{ end }}
