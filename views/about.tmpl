@@ -5,10 +5,13 @@
 	<div class="mt-5">
 		<h4 class="color-blue-primary font-monoid-bold">About</h4>
 	</div>
-	<div class="mt-5">
+	<div id="about" class="mt-5">
 		<p>
 			<img src="/static/img/profile.jpeg" class="float-end ms-4 mb-4" style="width: 150px; height: 150px; border: 16px solid white;">
-			{{ .html }}
+			<div hx-get="/get/page?title=about" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+				<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+				<h5 class="font-monospace">Looks like there is no information to show yet :(</h5>
+			</div>
 		</p>
 	</div>
 </div>

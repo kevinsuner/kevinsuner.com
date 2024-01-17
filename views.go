@@ -295,14 +295,6 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func AboutPage(w http.ResponseWriter, r *http.Request) {
-	var content string
-	err := db.QueryRow(
-		`select content from pages where title = 'about'`).Scan(&content)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to get page: %v", err), http.StatusInternalServerError)
-		return
-	}
-
 	t, err := template.New("about").ParseFiles(
 		filepath.Join("views", "layouts", "header.tmpl"),
 		filepath.Join("views", "layouts", "navbar.tmpl"),
@@ -315,13 +307,6 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	if err = goldmark.Convert([]byte(content), &buf); err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
-		return
-	}
-	html := buf.String()
-
-	buf = bytes.Buffer{}
 	if err = t.Execute(&buf, map[string]interface{}{
 		"meta": Meta{
 			Description: "Kevin is a software engineer working on stuff such as distributed systems, identity management and developer experience. He has been programming since the late 2000s after failing to cheat on a videogame called Lineage II.",
@@ -330,7 +315,6 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 			URL: "https://"+r.Host,
 			Title: "About | Kevin Suñer",
 		},
-		"html": template.HTML(html),
 	}); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return

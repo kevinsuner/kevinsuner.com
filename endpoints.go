@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"errors"
 	"fmt"
 	"html/template"
@@ -10,12 +11,46 @@ import (
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/yuin/goldmark"
 )
 
 var (
 	errEmptyString			error = errors.New("empty string")
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
+
+func GetPage(w http.ResponseWriter, r *http.Request) {
+	if len(r.URL.Query().Get("title")) <= 0 {
+		http.Error(w, fmt.Sprintf("failed to parse title: %v", errEmptyString), http.StatusBadRequest)
+		return
+	}
+
+	var content string
+	err := db.QueryRow(
+		`select content from pages where title = $1`, r.URL.Query().Get("title")).Scan(&content)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		http.Error(w, fmt.Sprintf("failed to get page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	if len(content) > 0 {
+		var buf bytes.Buffer
+		if err = goldmark.Convert([]byte(content), &buf); err != nil {
+			http.Error(w, fmt.Sprintf("failed to parse markdown: %v", err), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Write(buf.Bytes())
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(`
+	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
+	<h5 class="font-monospace">Looks like there is no information to show yet :(</h5>`))
+}
 
 func DeleteArticle(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
@@ -245,4 +280,5 @@ func InitEndpoints(mux *http.ServeMux) {
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)
 	mux.HandleFunc("/get/articles", GetArticles)
+	mux.HandleFunc("/get/page", GetPage)
 }
