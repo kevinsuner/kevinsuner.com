@@ -74,6 +74,39 @@ func PutPage(w http.ResponseWriter, r *http.Request) {
 	</div>`, os.Getenv("ADMIN_URL"))))
 }
 
+func PostPage(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var (
+		title	string = r.Form.Get("title")
+		content	string = r.Form.Get("content")
+	)
+
+	if err := checkEmptyString(title, content); err != nil {
+		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err := db.Exec(
+		`insert into "pages" (created_at, title, content) values ($1, $2, $3)`,
+		time.Now().Format(time.RFC3339), title, content)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to post page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(fmt.Sprintf(`
+	<div class="alert alert-primary" role="alert">
+		<p>¡Hooray! A new page has been created</p>
+		<hr>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
+	</div>`, os.Getenv("ADMIN_URL"))))
+}
+
 func GetPages(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query(`select id, title from "pages"`)
 	if err != nil {
@@ -363,6 +396,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/put/article", CheckCookie(http.HandlerFunc(PutArticle)))
 	mux.Handle("/delete/article", CheckCookie(http.HandlerFunc(DeleteArticle)))
 	mux.Handle("/get/pages", CheckCookie(http.HandlerFunc(GetPages)))
+	mux.Handle("/post/page", CheckCookie(http.HandlerFunc(PostPage)))
 	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
 	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
 

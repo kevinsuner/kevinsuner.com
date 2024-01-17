@@ -15,6 +15,29 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+func CreatePage(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("create").ParseFiles(
+		filepath.Join("views", "layouts", "admin_header.tmpl"),
+		filepath.Join("views", "layouts", "navbar.tmpl"),
+		filepath.Join("views", "layouts", "footer.tmpl"),
+		filepath.Join("views", "pages", "create.tmpl"),
+	)
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, nil); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func EditPage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -409,6 +432,7 @@ func InitViews(mux *http.ServeMux) {
 	mux.HandleFunc(fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")), AdminDashboard)
 	mux.Handle("/create/article", CheckCookie(http.HandlerFunc(CreateArticle)))
 	mux.Handle("/edit/article", CheckCookie(http.HandlerFunc(EditArticle)))
+	mux.Handle("/create/page", CheckCookie(http.HandlerFunc(CreatePage)))
 	mux.Handle("/edit/page", CheckCookie(http.HandlerFunc(EditPage)))
 
 	/*** Public ***/
