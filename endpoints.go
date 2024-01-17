@@ -19,6 +19,48 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
+func PutProject(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if err = r.ParseForm(); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var (
+		title	string = r.Form.Get("title")
+		link	string = r.Form.Get("link")
+		image	string = r.Form.Get("image")
+		caption	string = r.Form.Get("caption")
+		content	string = r.Form.Get("content")
+	)
+
+	if err = checkEmptyString(title, link, image, caption, content); err != nil {
+		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(
+		`update "projects" set updated_at=$1, title=$2, link=$3, image=$4, caption=$5, content=$6 where id = $7`,
+		time.Now().Format(time.RFC3339), title, link, image, caption, content, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to update project: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(fmt.Sprintf(`
+	<div class="alert alert-primary" role="alert">
+		<p>¡Hey! The project has been successfully edited</p>
+		<hr>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
+	</div>`, os.Getenv("ADMIN_URL"))))
+}
+
 func PostProject(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
@@ -518,6 +560,7 @@ func InitEndpoints(mux *http.ServeMux) {
 	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
 	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
 	mux.Handle("/post/project", CheckCookie(http.HandlerFunc(PostProject)))
+	mux.Handle("/put/project", CheckCookie(http.HandlerFunc(PutProject)))
 
 	/*** Public ***/
 	mux.HandleFunc("/authenticate", Authenticate)

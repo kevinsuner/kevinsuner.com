@@ -15,6 +15,50 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+func EditProject(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var project Project
+	err = db.QueryRow(
+		`select id, title, link, image, caption, content from "projects" where id = $1`, id).Scan(
+		&project.ID,
+		&project.Title,
+		&project.Link,
+		&project.Image,
+		&project.Caption,
+		&project.Content)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get project: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	t, err := template.New("edit").ParseFiles(
+		filepath.Join("views", "layouts", "admin_header.tmpl"),
+		filepath.Join("views", "layouts", "navbar.tmpl"),
+		filepath.Join("views", "layouts", "footer.tmpl"),
+		filepath.Join("views", "projects", "edit.tmpl"),
+	)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, map[string]interface{}{
+		"project": project,
+	}); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func CreateProject(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("create").ParseFiles(
 		filepath.Join("views", "layouts", "admin_header.tmpl"),
@@ -422,6 +466,7 @@ func InitViews(mux *http.ServeMux) {
 	mux.Handle("/create/page", CheckCookie(http.HandlerFunc(CreatePage)))
 	mux.Handle("/edit/page", CheckCookie(http.HandlerFunc(EditPage)))
 	mux.Handle("/create/project", CheckCookie(http.HandlerFunc(CreateProject)))
+	mux.Handle("/edit/project", CheckCookie(http.HandlerFunc(EditProject)))
 
 	/*** Public ***/
 	mux.HandleFunc("/", HomePage)

@@ -1,0 +1,57 @@
+{{ define "edit" }}
+{{ template "admin_header" . }}
+{{ template "navbar" . }}
+<div class="container">
+	<div class="mt-5">
+		<h4 class="color-blue-primary font-monoid-bold">Edit project</h4>
+	</div>
+	<div class="mt-5">
+		<div id="edit-project-alert"></div>
+		<div id="edit-project-form" class="card background-dark-primary rounded-0 border-0 shadow p-3 mt-3">
+			<div class="card-body">
+				<form hx-put="/put/project?id={{ .project.ID }}" hx-target="#edit-project-alert" hx-swap="innerHTML">
+					<div class="mb-3">
+						<label for="title-input" class="form-label font-monospace">Title</label>
+						<input name="title" type="text" value="{{ .project.Title }}" class="form-control font-monospace" id="title-input">
+					</div>
+					<div class="mb-3">
+						<label for="link-input" class="form-label font-monospace">Link</label>
+						<input name="link" type="text" value="{{ .project.Link }}" class="form-control font-monospace" id="link-input">
+					</div>
+					<div class="mb-3">
+						<label for="image-input" class="form-label font-monospace">Image</label>
+						<input name="image" type="text" value="{{ .project.Image }}" class="form-control font-monospace" id="image-input">
+					</div>
+					<div class="mb-3">
+						<label for="caption-input" class="form-label font-monospace">Caption</label>
+						<input name="caption" type="text" value="{{ .project.Caption }}" class="form-control font-monospace" id="caption-input">
+					</div>
+					<div class="mb-3">
+						<label for="content-textarea" class="form-label font-monospace">Content</label>
+						<textarea name="content" class="form-control font-monospace" id="content-textarea" style="min-height: 250px; max-height: 250px;">{{ .project.Content }}</textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+
+					<button type="button" class="btn btn-outline-primary float-end" data-bs-toggle="modal" data-bs-target="#delete-project-modal">Delete</button>
+					<div class="modal fade" id="delete-project-modal" tabindex="-1"> 
+						<div class="modal-dialog shadow">
+							<div class="modal-content background-dark-primary rounded-0 border-0">
+								<div class="modal-body">
+									<p class="mb-0">You're about to delete <b>"{{ .project.Title }}"</b></p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary" hx-delete="/delete/project?id={{ .project.ID }}">
+										I want to delete this project
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{{ template "footer" . }}
+{{ end }}
