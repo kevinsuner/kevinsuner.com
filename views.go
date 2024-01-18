@@ -37,10 +37,10 @@ func EditProject(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("edit").ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "projects", "edit.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "projects", "edit.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -61,10 +61,10 @@ func EditProject(w http.ResponseWriter, r *http.Request) {
 
 func CreateProject(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("create").ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "projects", "create.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "projects", "create.tmpl"),
 	)
 
 	if err != nil {
@@ -84,10 +84,10 @@ func CreateProject(w http.ResponseWriter, r *http.Request) {
 
 func CreatePage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("create").ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "pages", "create.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "pages", "create.tmpl"),
 	)
 
 	if err != nil {
@@ -124,10 +124,10 @@ func EditPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("edit").ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "pages", "edit.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "pages", "edit.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -169,10 +169,10 @@ func ViewArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("article").ParseFiles(
-		filepath.Join("views", "layouts", "header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "articles", "article.tmpl"),
+		filepath.Join("templates", "layouts", "header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "articles", "article.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -231,10 +231,10 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("edit").ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "articles", "edit.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "articles", "edit.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -255,10 +255,10 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("create").ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "articles", "create.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "articles", "create.tmpl"),
 	)
 
 	if err != nil {
@@ -280,10 +280,10 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("admin_token")
 	if errors.Is(err, http.ErrNoCookie) {
 		t, err := template.New("login").ParseFiles(
-			filepath.Join("views", "layouts", "admin_header.tmpl"),
-			filepath.Join("views", "layouts", "navbar.tmpl"),
-			filepath.Join("views", "layouts", "footer.tmpl"),
-			filepath.Join("views", "admin", "login.tmpl"),
+			filepath.Join("templates", "layouts", "admin_header.tmpl"),
+			filepath.Join("templates", "layouts", "navbar.tmpl"),
+			filepath.Join("templates", "layouts", "footer.tmpl"),
+			filepath.Join("templates", "admin", "login.tmpl"),
 		)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -306,10 +306,10 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 
 	if cookie.Value != os.Getenv("ADMIN_TOKEN") {
 		t, err := template.New("login").ParseFiles(
-			filepath.Join("views", "layouts", "admin_header.tmpl"),
-			filepath.Join("views", "layouts", "navbar.tmpl"),
-			filepath.Join("views", "layouts", "footer.tmpl"),
-			filepath.Join("views", "admin", "login.tmpl"),
+			filepath.Join("templates", "layouts", "admin_header.tmpl"),
+			filepath.Join("templates", "layouts", "navbar.tmpl"),
+			filepath.Join("templates", "layouts", "footer.tmpl"),
+			filepath.Join("templates", "admin", "login.tmpl"),
 		)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -336,10 +336,10 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("dashboard").Funcs(templateFuncs).ParseFiles(
-		filepath.Join("views", "layouts", "admin_header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "admin", "dashboard.tmpl"),
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "admin", "dashboard.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -361,10 +361,10 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 
 func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("projects").ParseFiles(
-		filepath.Join("views", "layouts", "header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "projects.tmpl"),
+		filepath.Join("templates", "layouts", "header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "projects.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -391,10 +391,10 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 
 func AboutPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("about").ParseFiles(
-		filepath.Join("views", "layouts", "header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "about.tmpl"),
+		filepath.Join("templates", "layouts", "header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "about.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
@@ -429,10 +429,10 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t, err := template.New("homepage").Funcs(templateFuncs).ParseFiles(
-		filepath.Join("views", "layouts", "header.tmpl"),
-		filepath.Join("views", "layouts", "navbar.tmpl"),
-		filepath.Join("views", "layouts", "footer.tmpl"),
-		filepath.Join("views", "homepage.tmpl"),
+		filepath.Join("templates", "layouts", "header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "homepage.tmpl"),
 	)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)

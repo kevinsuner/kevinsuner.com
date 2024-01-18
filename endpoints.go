@@ -176,7 +176,7 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.New("projects").ParseFiles(filepath.Join("views", "projects", "projects.tmpl"))
+	t, err := template.New("projects").ParseFiles(filepath.Join("templates", "projects", "projects.tmpl"))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse template: %v", err), http.StatusInternalServerError)
 		return
@@ -305,7 +305,7 @@ func GetPages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.New("pages").ParseFiles(filepath.Join("views", "pages", "pages.tmpl"))
+	t, err := template.New("pages").ParseFiles(filepath.Join("templates", "pages", "pages.tmpl"))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse template: %v", err), http.StatusInternalServerError)
 		return
@@ -524,7 +524,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.New("articles").ParseFiles(filepath.Join("views", "articles", "articles.tmpl"))
+	t, err := template.New("articles").ParseFiles(filepath.Join("templates", "articles", "articles.tmpl"))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse template: %v", err), http.StatusInternalServerError)
 		return
