@@ -1,22 +1,25 @@
 {{ define "articles" }}
-	{{ range .articles }}
-		{{ if $.is_admin }}
-		<div class="mb-4">
-			<h6 class="font-monoid-regular">
-				<a href="/edit/article?id={{ .ID }}" class="color-blue-primary">{{ .Title }}</a>
-			</h6>
-			<hr/>
-		</div>
+	{{ if gt (len .articles) 0 }}
+		{{ if .is_admin }}
+		<ul class="list-group">
+			{{ range .articles }}
+			<li class="list-group-item">
+				<a href="/edit/article?id={{ .ID }}" class="color-blue-primary font-monoid-regular">{{ .Title }}</a>
+			</li>
+			{{ end }}
+		</ul>
 		{{ else }}
-		<div class="mb-4">
-			<h6 class="font-monoid-regular">
-				<a href="/article/{{ .Slug }}" class="color-blue-primary">{{ .Title }}</a>
-			</h6>
-			<p class="font-monospace mb-2">{{ .Description }}</p>
-			<span class="badge background-dark-primary font-monospace border rounded-0">
-				Published on {{ .CreatedAt.String }}
-			</span>
-		</div>
+			{{ range .articles }}
+			<div class="mb-4">
+				<h6 class="font-monoid-regular">
+					<a href="/article/{{ .Slug }}" class="color-blue-primary">{{ .Title }}</a>
+				</h6>
+				<p class="font-monospace mb-2">{{ .Description }}</p>
+				<span class="badge background-dark-primary font-monospace border rounded-0">
+					Published on {{ .CreatedAt.String }}
+				</span>
+			</div>
+			{{ end }}
 		{{ end }}
 	{{ else }}
 	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>

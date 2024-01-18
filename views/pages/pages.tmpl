@@ -1,11 +1,12 @@
 {{ define "pages" }}
-	{{ range .pages }}
-	<div class="mb-4">
-		<h6 class="font-monoid-regular">
-			<a href="/edit/page?id={{ .ID }}" class="color-blue-primary">{{ .Title }}</a>
-		</h6>
-		<hr/>
-	</div>
+	{{ if gt (len .pages) 0 }}
+	<ul class="list-group">
+		{{ range .pages }}
+		<li class="list-group-item">
+			<a href="/edit/page?id={{ .ID }}" class="color-blue-primary font-monoid-regular">{{ .Title }}</a>
+		</li>
+		{{ end }}
+	</ul>
 	{{ else }}
 	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
 	<h5 class="font-monospace">Looks like there are no pages to show yet :(</h5>

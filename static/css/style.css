@@ -78,3 +78,13 @@ a {
     border-color: #00ADB5 !important;
     border-radius: 0 !important;
 }
+
+/* Lists */
+
+.list-group-item {
+    color: #00ADB5 !important;
+    font-family: Monoid Regular !important;
+    background-color: transparent !important;
+    border-color: #00ADB5 !important;
+    border-radius: 0 !important;
+}
