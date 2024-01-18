@@ -19,63 +19,7 @@ var (
 	errInvalidCredentials	error = errors.New("invalid username or password")
 )
 
-func DeleteProject(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
-		return
-	}
-
-	_, err = db.Exec(`delete from "projects" where id = $1`, id)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to delete project: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
-}
-
-func PutProject(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
-		return
-	}
-
-	if err = r.ParseForm(); err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
-		return
-	}
-
-	var (
-		title	string = r.Form.Get("title")
-		link	string = r.Form.Get("link")
-		image	string = r.Form.Get("image")
-		caption	string = r.Form.Get("caption")
-		content	string = r.Form.Get("content")
-	)
-
-	if err = checkEmptyString(title, link, image, caption, content); err != nil {
-		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
-		return
-	}
-
-	_, err = db.Exec(
-		`update "projects" set updated_at=$1, title=$2, link=$3, image=$4, caption=$5, content=$6 where id = $7`,
-		time.Now().Format(time.RFC3339), title, link, image, caption, content, id)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to update project: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte(fmt.Sprintf(`
-	<div class="alert alert-primary" role="alert">
-		<p>¡Hey! The project has been successfully edited</p>
-		<hr>
-		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
-	</div>`, os.Getenv("ADMIN_URL"))))
-}
+/*** Projects ***/
 
 func PostProject(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -195,23 +139,7 @@ func GetProjects(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func DeletePage(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
-		return
-	}
-
-	_, err = db.Exec(`delete from "pages" where id = $1`, id)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to delete page: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
-}
-
-func PutPage(w http.ResponseWriter, r *http.Request) {
+func PutProject(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
@@ -225,30 +153,51 @@ func PutPage(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		title	string = r.Form.Get("title")
+		link	string = r.Form.Get("link")
+		image	string = r.Form.Get("image")
+		caption	string = r.Form.Get("caption")
 		content	string = r.Form.Get("content")
 	)
 
-	if err = checkEmptyString(title, content); err != nil {
+	if err = checkEmptyString(title, link, image, caption, content); err != nil {
 		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
 		return
 	}
 
 	_, err = db.Exec(
-		`update "pages" set updated_at=$1, title=$2, content=$3 where id = $4`,
-		time.Now().Format(time.RFC3339), title, content, id)
+		`update "projects" set updated_at=$1, title=$2, link=$3, image=$4, caption=$5, content=$6 where id = $7`,
+		time.Now().Format(time.RFC3339), title, link, image, caption, content, id)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to update page: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("failed to update project: %v", err), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(fmt.Sprintf(`
 	<div class="alert alert-primary" role="alert">
-		<p>¡Hey! The page has been successfully edited</p>
+		<p>¡Hey! The project has been successfully edited</p>
 		<hr>
 		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
 	</div>`, os.Getenv("ADMIN_URL"))))
 }
+
+func DeleteProject(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(`delete from "projects" where id = $1`, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to delete project: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
+}
+
+/*** Pages ***/
 
 func PostPage(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -347,23 +296,7 @@ func GetPage(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func DeleteArticle(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
-		return
-	}
-
-	_, err = db.Exec(`delete from "articles" where id = $1`, id)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to delete article: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
-}
-
-func PutArticle(w http.ResponseWriter, r *http.Request) {
+func PutPage(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
@@ -376,35 +309,49 @@ func PutArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var (
-		title			string = r.Form.Get("title")
-		slug			string = r.Form.Get("slug")
-		description		string = r.Form.Get("description")
-		author			string = r.Form.Get("author")
-		status			string = r.Form.Get("status")
-		content			string = r.Form.Get("content")
+		title	string = r.Form.Get("title")
+		content	string = r.Form.Get("content")
 	)
 
-	if err = checkEmptyString(title, slug, description, author, status, content); err != nil {
+	if err = checkEmptyString(title, content); err != nil {
 		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
 		return
 	}
 
 	_, err = db.Exec(
-		`update "articles" set updated_at=$1, title=$2, slug=$3, description=$4, author=$5, status=$6, content=$7 where id = $8`,
-		time.Now().Format(time.RFC3339), title, slug, description, author, status, content, id)
+		`update "pages" set updated_at=$1, title=$2, content=$3 where id = $4`,
+		time.Now().Format(time.RFC3339), title, content, id)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to update article: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("failed to update page: %v", err), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.Write([]byte(fmt.Sprintf(`
 	<div class="alert alert-primary" role="alert">
-		<p>¡Hey! The article has been successfully edited</p>
+		<p>¡Hey! The page has been successfully edited</p>
 		<hr>
 		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
 	</div>`, os.Getenv("ADMIN_URL"))))
 }
+
+func DeletePage(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(`delete from "pages" where id = $1`, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to delete page: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
+}
+
+/*** Articles ***/
 
 func PostArticle(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
@@ -543,6 +490,67 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
+func PutArticle(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if err = r.ParseForm(); err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	var (
+		title			string = r.Form.Get("title")
+		slug			string = r.Form.Get("slug")
+		description		string = r.Form.Get("description")
+		author			string = r.Form.Get("author")
+		status			string = r.Form.Get("status")
+		content			string = r.Form.Get("content")
+	)
+
+	if err = checkEmptyString(title, slug, description, author, status, content); err != nil {
+		http.Error(w, fmt.Sprintf("failed to validate form values: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(
+		`update "articles" set updated_at=$1, title=$2, slug=$3, description=$4, author=$5, status=$6, content=$7 where id = $8`,
+		time.Now().Format(time.RFC3339), title, slug, description, author, status, content, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to update article: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(fmt.Sprintf(`
+	<div class="alert alert-primary" role="alert">
+		<p>¡Hey! The article has been successfully edited</p>
+		<hr>
+		<a href="/%s" class="color-blue-primary mb-0">Back to Dashboard &#x2192;</a>
+	</div>`, os.Getenv("ADMIN_URL"))))
+}
+
+func DeleteArticle(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse id: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	_, err = db.Exec(`delete from "articles" where id = $1`, id)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to delete article: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Add("HX-Redirect", fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")))
+}
+
+/*** Admin ***/
+
 func Authenticate(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, fmt.Sprintf("failed to parse form: %v", err), http.StatusBadRequest)
@@ -567,21 +575,25 @@ func Authenticate(w http.ResponseWriter, r *http.Request) {
 }
 
 func InitEndpoints(mux *http.ServeMux) {
-	/*** Private **/
-	mux.Handle("/post/article", CheckCookie(http.HandlerFunc(PostArticle)))
-	mux.Handle("/put/article", CheckCookie(http.HandlerFunc(PutArticle)))
-	mux.Handle("/delete/article", CheckCookie(http.HandlerFunc(DeleteArticle)))
-	mux.Handle("/get/pages", CheckCookie(http.HandlerFunc(GetPages)))
-	mux.Handle("/post/page", CheckCookie(http.HandlerFunc(PostPage)))
-	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
-	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
+	/*** Projects ***/
 	mux.Handle("/post/project", CheckCookie(http.HandlerFunc(PostProject)))
+	mux.HandleFunc("/get/projects", GetProjects)
 	mux.Handle("/put/project", CheckCookie(http.HandlerFunc(PutProject)))
 	mux.Handle("/delete/project", CheckCookie(http.HandlerFunc(DeleteProject)))
 
-	/*** Public ***/
-	mux.HandleFunc("/authenticate", Authenticate)
-	mux.HandleFunc("/get/articles", GetArticles)
+	/*** Pages ***/
+	mux.Handle("/post/page", CheckCookie(http.HandlerFunc(PostPage)))
+	mux.Handle("/get/pages", CheckCookie(http.HandlerFunc(GetPages)))
 	mux.HandleFunc("/get/page", GetPage)
-	mux.HandleFunc("/get/projects", GetProjects)
+	mux.Handle("/put/page", CheckCookie(http.HandlerFunc(PutPage)))
+	mux.Handle("/delete/page", CheckCookie(http.HandlerFunc(DeletePage)))
+
+	/*** Articles ***/
+	mux.Handle("/post/article", CheckCookie(http.HandlerFunc(PostArticle)))
+	mux.HandleFunc("/get/articles", GetArticles)
+	mux.Handle("/put/article", CheckCookie(http.HandlerFunc(PutArticle)))
+	mux.Handle("/delete/article", CheckCookie(http.HandlerFunc(DeleteArticle)))
+
+	/*** Admin **/
+	mux.HandleFunc("/authenticate", Authenticate)
 }
