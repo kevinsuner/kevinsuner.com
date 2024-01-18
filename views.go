@@ -15,6 +15,31 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+/*** Projects ***/
+
+func CreateProject(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("create").ParseFiles(
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "projects", "create.tmpl"),
+	)
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, nil); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
 func EditProject(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil {
@@ -59,28 +84,7 @@ func EditProject(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func CreateProject(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("create").ParseFiles(
-		filepath.Join("templates", "layouts", "admin_header.tmpl"),
-		filepath.Join("templates", "layouts", "navbar.tmpl"),
-		filepath.Join("templates", "layouts", "footer.tmpl"),
-		filepath.Join("templates", "projects", "create.tmpl"),
-	)
-
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	var buf bytes.Buffer
-	if err = t.Execute(&buf, nil); err != nil {
-		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write(buf.Bytes())
-}
+/*** Pages ***/
 
 func CreatePage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("create").ParseFiles(
@@ -138,6 +142,31 @@ func EditPage(w http.ResponseWriter, r *http.Request) {
 	if err = t.Execute(&buf, map[string]interface{}{
 		"page": page,
 	}); err != nil {
+		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write(buf.Bytes())
+}
+
+/*** Articles ***/
+
+func CreateArticle(w http.ResponseWriter, r *http.Request) {
+	t, err := template.New("create").ParseFiles(
+		filepath.Join("templates", "layouts", "admin_header.tmpl"),
+		filepath.Join("templates", "layouts", "navbar.tmpl"),
+		filepath.Join("templates", "layouts", "footer.tmpl"),
+		filepath.Join("templates", "articles", "create.tmpl"),
+	)
+
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var buf bytes.Buffer
+	if err = t.Execute(&buf, nil); err != nil {
 		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
 		return
 	}
@@ -253,28 +282,7 @@ func EditArticle(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func CreateArticle(w http.ResponseWriter, r *http.Request) {
-	t, err := template.New("create").ParseFiles(
-		filepath.Join("templates", "layouts", "admin_header.tmpl"),
-		filepath.Join("templates", "layouts", "navbar.tmpl"),
-		filepath.Join("templates", "layouts", "footer.tmpl"),
-		filepath.Join("templates", "articles", "create.tmpl"),
-	)
-
-	if err != nil {
-		http.Error(w, fmt.Sprintf("failed to parse templates: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	var buf bytes.Buffer
-	if err = t.Execute(&buf, nil); err != nil {
-		http.Error(w, fmt.Sprintf("failed to execute template: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write(buf.Bytes())
-}
+/*** Admin ***/
 
 func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("admin_token")
@@ -358,8 +366,9 @@ func AdminDashboard(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
+/*** Views ***/
 
-func ProjectsPage(w http.ResponseWriter, r *http.Request) {
+func Projects(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("projects").ParseFiles(
 		filepath.Join("templates", "layouts", "header.tmpl"),
 		filepath.Join("templates", "layouts", "navbar.tmpl"),
@@ -389,7 +398,7 @@ func ProjectsPage(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func AboutPage(w http.ResponseWriter, r *http.Request) {
+func About(w http.ResponseWriter, r *http.Request) {
 	t, err := template.New("about").ParseFiles(
 		filepath.Join("templates", "layouts", "header.tmpl"),
 		filepath.Join("templates", "layouts", "navbar.tmpl"),
@@ -419,7 +428,7 @@ func AboutPage(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf.Bytes())
 }
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
+func Home(w http.ResponseWriter, r *http.Request) {
 	var pages float64
 	err := db.QueryRow(fmt.Sprintf(`
 		select count(id)::float / %d as pages from articles where status = 'published'`, ARTICLES_LIMIT)).Scan(&pages)
@@ -459,18 +468,24 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 }
 
 func InitViews(mux *http.ServeMux) {
-	/*** Private **/
-	mux.HandleFunc(fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")), AdminDashboard)
-	mux.Handle("/create/article", CheckCookie(http.HandlerFunc(CreateArticle)))
-	mux.Handle("/edit/article", CheckCookie(http.HandlerFunc(EditArticle)))
-	mux.Handle("/create/page", CheckCookie(http.HandlerFunc(CreatePage)))
-	mux.Handle("/edit/page", CheckCookie(http.HandlerFunc(EditPage)))
+	/*** Projects ***/
 	mux.Handle("/create/project", CheckCookie(http.HandlerFunc(CreateProject)))
 	mux.Handle("/edit/project", CheckCookie(http.HandlerFunc(EditProject)))
+	
+	/*** Pages ***/
+	mux.Handle("/create/page", CheckCookie(http.HandlerFunc(CreatePage)))
+	mux.Handle("/edit/page", CheckCookie(http.HandlerFunc(EditPage)))
 
-	/*** Public ***/
-	mux.HandleFunc("/", HomePage)
-	mux.HandleFunc("/about", AboutPage)
-	mux.HandleFunc("/projects", ProjectsPage)
+	/*** Articles ***/
+	mux.Handle("/create/article", CheckCookie(http.HandlerFunc(CreateArticle)))
 	mux.HandleFunc("/article/", ViewArticle)
+	mux.Handle("/edit/article", CheckCookie(http.HandlerFunc(EditArticle)))
+
+	/*** Admin ***/
+	mux.HandleFunc(fmt.Sprintf("/%s", os.Getenv("ADMIN_URL")), AdminDashboard)
+
+	/*** Views ***/
+	mux.HandleFunc("/projects", Projects)
+	mux.HandleFunc("/about", About)
+	mux.HandleFunc("/", Home)
 }
