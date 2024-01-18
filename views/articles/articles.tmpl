@@ -1,47 +1,26 @@
 {{ define "articles" }}
 	{{ range .articles }}
-	<div class="mb-4">
-		<h6 class="font-monoid-regular">
-			<a href="/article/{{ .Slug }}" class="color-blue-primary">{{ .Title }}</a>
-		</h6>
-		<p class="font-monospace mb-2">{{ .Description }}</p>
 		{{ if $.is_admin }}
-		<span class="badge background-dark-primary font-monospace border rounded-0">
-			<a href="/edit/article?id={{ .ID }}" class="link-light link-underline-opacity-0">Edit</a>
-		</span>
-
-		<span class="badge background-dark-primary font-monospace border rounded-0">
-			<a class="link-light link-underline-opacity-0" data-bs-toggle="modal" data-bs-target="#delete-article-modal" style="cursor: grab;">
-				Delete
-			</a>
-		</span>
-		<div class="modal fade" id="delete-article-modal" tabindex="-1"> 
-			<div class="modal-dialog shadow">
-				<div class="modal-content background-dark-primary rounded-0 border-0">
-					<div class="modal-body">
-						<p class="mb-0">You're about to delete <b>"{{ .Title }}"</b></p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary" hx-delete="/delete/article?id={{ .ID }}">
-							I want to delete this article
-						</button>
-					</div>
-				</div>
-			</div>
+		<div class="mb-4">
+			<h6 class="font-monoid-regular">
+				<a href="/edit/article?id={{ .ID }}" class="color-blue-primary">{{ .Title }}</a>
+			</h6>
+			<hr/>
 		</div>
-
-		<span class="badge background-dark-primary font-monospace border rounded-0">
-			Published on {{ .CreatedAt.String }}
-		</span>
 		{{ else }}
-		<span class="badge background-dark-primary font-monospace border rounded-0">
-			Published on {{ .CreatedAt.String }}
-		</span>
+		<div class="mb-4">
+			<h6 class="font-monoid-regular">
+				<a href="/article/{{ .Slug }}" class="color-blue-primary">{{ .Title }}</a>
+			</h6>
+			<p class="font-monospace mb-2">{{ .Description }}</p>
+			<span class="badge background-dark-primary font-monospace border rounded-0">
+				Published on {{ .CreatedAt.String }}
+			</span>
+		</div>
 		{{ end }}
-	</div>
 	{{ else }}
 	<h2 class="color-blue-primary font-monoid-bold">¡Oopsie Daisy!</h2>
 	<h5 class="font-monospace">Looks like there are no articles to show yet :(</h5>
 	{{ end }}
 {{ end }}
+
