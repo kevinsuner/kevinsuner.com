@@ -5,6 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="color-scheme" content="light"/>
+		<meta name="description" content="{{ .Description }}"/>
+		<meta name="og:title" content="{{ .Title }}"/>
+		<meta name="og:url" content="{{ .Site.BaseURL }}"/>
+		<meta name="og:description" content="{{ .Description }}"/>
+		<meta name="og:image" content="/images/og_image.jpg"/>
+		<link rel="canonical" href="{{ .Site.BaseURL }}"/>
 		<link rel="icon" href="/images/icon.png" type="image/png"/>
 		<link rel="icon" href="/images/icon.svg" type="image/svg+xml"/>
 		<link rel="apple-touch-icon" href="/images/icon.png"/>
