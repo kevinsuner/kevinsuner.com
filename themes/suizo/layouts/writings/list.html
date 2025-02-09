@@ -1,0 +1,38 @@
+{{ partial "header.html" . }}
+
+<!-- Hidden on XS and SM breakpoints -->
+<section class="container d-none d-xs-none d-sm-none d-md-block">
+    <div class="row">
+        <div class="col-9">
+            {{ range.Data.Pages.ByDate.Reverse }}
+            <a href="{{ .RelPermalink }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+                {{ .Title }}
+            </a>
+            <p class="font-inter-normal mt-2">
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                    {{ .Date.Format "January 2, 2006" }}
+                </time>
+            </p>
+            <p class="font-inter-normal mt-2">{{ .Description }}</p>
+            {{ end }}
+        </div>
+        <div class="col-3"></div>
+    </div>
+</section>
+
+<!-- Hidden on MD, LG, XL and XXL breakpoints -->
+<section class="container d-block d-sm-block d-md-none">
+    {{ range.Data.Pages.ByDate.Reverse }}
+    <a href="{{ .RelPermalink }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+        {{ .Title }}
+    </a>
+    <p class="font-inter-normal mt-2">
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "January 2, 2006" }}
+        </time>
+    </p>
+    <p class="font-inter-normal mt-2">{{ .Description }}</p>
+    {{ end }}
+</section>
+
+{{ partial "footer.html" . }}

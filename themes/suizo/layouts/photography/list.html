@@ -1,0 +1,33 @@
+{{ partial "header.html" . }}
+
+<!-- Hidden on XS and SM breakpoints -->
+<section class="container d-none d-xs-none d-sm-none d-md-block">
+        <div class="row d-flex align-items-center g-5">
+            {{ range.Data.Pages.ByTitle }}
+            <div class="col-4">
+                {{ if .Param "portrait" }}
+                <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="384" height="512">
+                {{ else }}
+                <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="512" height="384">
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+</section>
+
+<!-- Hidden on MD, LG, XL and XXL breakpoints -->
+<section class="container d-block d-sm-block d-md-none">
+    {{ range.Data.Pages.ByTitle }}
+    <div class="d-flex justify-content-center mt-5">
+        <div>
+            {{ if .Param "portrait" }}
+            <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="384" height="512">
+            {{ else }}
+            <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="512" height="384">
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+</section>
+
+{{ partial "footer.html" . }}

@@ -1,0 +1,44 @@
+baseURL = 'https://kevinsuner.com'
+languageCode = 'en-us'
+pluralizelisttitles = false
+disableKinds = ['taxonomy']
+title = 'Kevin Suñer'
+theme = 'suizo'
+
+[menu]
+
+[[menu.main]]
+identifier = 'index'
+name = 'Home'
+url = '/'
+weight = 10
+
+[[menu.main]]
+identifier = 'about'
+name = 'About'
+url = '/about'
+weight = 20
+
+[[menu.main]]
+identifier = 'projects'
+name = 'Projects'
+url = '/projects'
+weight = 30
+
+[[menu.main]]
+identifier = 'writings'
+name = 'Writings'
+url = '/writings'
+weight = 40
+
+[[menu.main]]
+identifier = 'work'
+name = 'Work'
+url = '/work'
+weight = 50
+
+[[menu.main]]
+identifier = 'photography'
+name = 'Photography'
+url = '/photography'
+weight = 60

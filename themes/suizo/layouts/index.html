@@ -1,0 +1,75 @@
+{{ partial "header.html" . }}
+
+<!-- Hidden on XS and SM breakpoints -->
+<section class="container d-none d-xs-none d-sm-none d-md-block">
+    <div class="row gx-5">
+        <div class="col-4">
+            <h2 class="font-inter-semibold mb-5">Projects</h2>
+            {{ range first 5 (where .Site.RegularPages.ByDate.Reverse "Type" "projects") }}
+            <a href="{{ .Param "url" }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+                {{ .Title }}
+            </a>
+            <div class="font-inter-normal mt-2">{{ .Content }}</div>
+            {{ end }}
+            <a href="/projects" class="font-inter-medium link-dark link-underline-dark">
+                See all {{ len (where .Site.RegularPages "Type" "projects") }} projects -->
+            </a>
+        </div>
+        <div class="col-4">
+            <h2 class="font-inter-semibold mb-5">Writings</h2>
+            {{ range first 5 (where .Site.RegularPages.ByDate.Reverse "Type" "writings") }}
+            <a href="{{ .RelPermalink }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+                {{ .Title }}
+            </a>
+            <p class="font-inter-normal mt-2">
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                    {{ .Date.Format "January 2, 2006" }}
+                </time>
+            </p>
+            {{ end }}
+            <a href="/writings" class="font-inter-medium link-dark link-underline-dark">
+                See all {{ len (where .Site.RegularPages "Type" "writings") }} writings -->
+            </a>
+        </div>
+        <div class="col-4">
+            <div class="d-flex align-items-center justify-content-start">
+                <div class="py-5">
+                    {{ .Content }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hidden on MD, LG, XL and XXL breakpoints -->
+<section class="container d-block d-sm-block d-md-none">
+    <h2 class="font-inter-semibold mb-5">Projects</h2>
+    {{ range first 5 (where .Site.RegularPages.ByDate.Reverse "Type" "projects") }}
+    <a href="{{ .Param "url" }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+        {{ .Title }}
+    </a>
+    <div class="mt-2">{{ .Content }}</div>
+    {{ end }}
+    <a href="/projects" class="font-inter-medium link-dark link-underline-dark">
+        See all {{ len (where .Site.RegularPages "Type" "projects") }} projects ->
+    </a>
+
+    <h2 class="font-inter-semibold my-5">Writings</h2>
+    {{ range first 5 (where .Site.RegularPages.ByDate.Reverse "Type" "writings") }}
+    <a href="{{ .RelPermalink }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+        {{ .Title }}
+    </a>
+    <p class="font-inter-normal mt-2">
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="font-inter-medium">
+            {{ .Date.Format "January 2, 2006" }}
+        </time>
+    </p>
+    {{ end }}
+    <a href="/writings" class="font-inter-medium link-dark link-underline-dark">
+        See all {{ len (where .Site.RegularPages "Type" "writings") }} writings ->
+    </a>
+
+    <div class="mt-5">{{ .Content }}</div>
+</section>
+
+{{ partial "footer.html" . }}

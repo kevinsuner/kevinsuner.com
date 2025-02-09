@@ -1,0 +1,33 @@
+{{ partial "header.html" . }}
+
+<!-- Hidden on XS and SM breakpoints -->
+<section class="container d-none d-xs-none d-sm-none d-md-block">
+    <div class="row gx-5">
+        <div class="col-6">
+            <h2 class="font-inter-semibold mb-5">Hola</h2>
+            {{ .Content }}
+        </div>
+        <div class="col-6">
+            <div class="d-flex justify-content-end">
+                <div>
+                    <img src="/images/kevin.webp" class="img-fluid" width="384" height="512">
+                    <figcaption class="font-inter-normal mt-2">I look like this</figcaption>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hidden on MD, LG, XL and XXL breakpoints -->
+<section class="container d-block d-sm-block d-md-none">
+    <h2 class="font-inter-semibold mb-5">Hola</h2>
+    {{ .Content }}
+    <div class="d-flex justify-content-center">
+        <div class="mt-5">
+            <img src="/images/kevin.webp" class="img-fluid" width="384" height="512">
+            <figcaption class="font-inter-normal mt-2">I look like this</figcaption>
+        </div>
+    </div>
+</section>
+
+{{ partial "footer.html" . }}

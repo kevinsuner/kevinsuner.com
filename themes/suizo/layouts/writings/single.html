@@ -1,0 +1,49 @@
+{{ partial "header.html" . }}
+
+<!-- Hidden on XS and SM breakpoints -->
+<section class="container d-none d-xs-none d-sm-none d-md-block">
+    <div class="row">
+        <div class="col-9">
+            <h2 class="font-inter-semibold">{{ .Title }}</h2>
+            <p class="font-inter-normal mb-5">
+                {{ if gt .Lastmod .Date }}
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                    {{ .Date.Format "January 2, 2006" }}
+                </time>
+                | Edited on
+                <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+                    {{ .Lastmod.Format "January 2, 2006" }}
+                </time>
+                {{ else }}
+                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+                    {{ .Date.Format "January 2, 2006" }}
+                </time>
+                {{ end }}
+            </p>
+            <div>{{ .Content }}</div>
+        </div>
+    </div>
+</section>
+
+<!-- Hidden on MD, LG, XL and XXL breakpoints -->
+<section class="container d-block d-sm-block d-md-none">
+    <h2 class="font-inter-semibold">{{ .Title }}</h2>
+    <p class="font-inter-normal mb-5">
+        {{ if gt .Lastmod .Date }}
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "January 2, 2006" }}
+        </time>
+        | Edited on
+        <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Lastmod.Format "January 2, 2006" }}
+        </time>
+        {{ else }}
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+            {{ .Date.Format "January 2, 2006" }}
+        </time>
+        {{ end }}
+    </p>
+    <div>{{ .Content }}</div>
+</section>
+
+{{ partial "footer.html" . }}

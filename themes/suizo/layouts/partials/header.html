@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta name="color-scheme" content="light"/>
+		<link rel="icon" href="/images/icon.png" type="image/png"/>
+		<link rel="icon" href="/images/icon.svg" type="image/svg+xml"/>
+		<link rel="apple-touch-icon" href="/images/icon.png"/>
+        <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" type="text/css" media="all"/>
+        <link rel="stylesheet" href="/stylesheets/styles.css" type="text/css" media="all"/>
+
+        <title>
+            {{ if not .IsHome }}{{ .Title }} | {{ end }}{{ .Site.Title }}
+        </title>
+    </head>
+    <body>
+
+        <!-- Hidden on XS and SM breakpoints -->
+        <header class="container d-none d-xs-none d-sm-none d-md-block mb-5">
+            <div class="row">
+                <div class="col-8">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <div class="py-5">
+                            <img src="/images/icon.svg" alt="Kevin Suñer logotype" width="125"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <div class="py-5">
+                            <ul class="nav flex-column">
+                            {{ range.Site.Menus.main }}
+                                <li class="nav-item mb-1">
+                                    <a href="{{ .URL }}" class="font-inter-medium link-dark link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                                        {{ .Name }}
+                                    </a>
+                                </li>
+                            {{ end }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hidden on MD, LG, XL and XXL breakpoints -->
+        <header class="container d-block d-sm-block d-md-none mb-5">
+            <div class="py-5">
+                <img src="/images/icon.svg" alt="Kevin Suñer logotype" width="125"/>
+                <ul class="nav flex-column mt-5">
+                {{ range.Site.Menus.main }}
+                    <li class="nav-item mb-1">
+                        <a href="{{ .URL }}" class="font-inter-medium link-dark link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                            {{ .Name }}
+                        </a>
+                    </li>
+                {{ end }}
+                </ul>
+            </div>
+        </header>
