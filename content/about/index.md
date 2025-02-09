@@ -1,5 +1,8 @@
 ---
 title: "About"
+description: >
+  In my spare time I enjoy building tools for the programming languages that I use,
+  building compilers, designing toy programming languages...
 type: "about"
 ---
 

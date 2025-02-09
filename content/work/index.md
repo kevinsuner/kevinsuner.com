@@ -1,5 +1,8 @@
 ---
 title: "Work"
+description: >
+  My career unprofessionally started in the 2010s by helping family members and
+  friends with design and websites. This eventually led me...
 type: "work"
 ---
 

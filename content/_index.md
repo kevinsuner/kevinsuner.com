@@ -1,5 +1,8 @@
 ---
 title: "Home"
+description: >
+  My name is Kevin Suñer. I'm a Spainard living in Barcelona. Code is what I use
+  to express myself. Software Engineering is my speciality...
 ---
 
 "An idiot admires complexity, a genius admires simplicity, a physicist tries to
