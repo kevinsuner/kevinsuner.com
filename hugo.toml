@@ -1,6 +1,7 @@
 baseURL = 'https://kevinsuner.com'
 languageCode = 'en-us'
 pluralizelisttitles = false
+enableRobotsTXT = true
 disableKinds = ['taxonomy']
 title = 'Kevin Suñer'
 theme = 'suizo'
