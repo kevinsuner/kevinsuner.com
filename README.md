@@ -1,9 +1,5 @@
 # kevinsuner.com
 
-Personal website running on Hugo and Cloudflare.
-
-# kevinsuner.com
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Kevin's personal website running on Hugo and Cloudflare.
