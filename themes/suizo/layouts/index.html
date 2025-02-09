@@ -6,7 +6,7 @@
         <div class="col-4">
             <h2 class="font-inter-semibold mb-5">Projects</h2>
             {{ range first 5 (where .Site.RegularPages.ByDate.Reverse "Type" "projects") }}
-            <a href="{{ .Param "url" }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+            <a href="{{ .Params.url }}" class="font-inter-medium link-dark link-underline-dark fs-4">
                 {{ .Title }}
             </a>
             <div class="font-inter-normal mt-2">{{ .Content }}</div>
@@ -45,7 +45,7 @@
 <section class="container d-block d-sm-block d-md-none">
     <h2 class="font-inter-semibold mb-5">Projects</h2>
     {{ range first 5 (where .Site.RegularPages.ByDate.Reverse "Type" "projects") }}
-    <a href="{{ .Param "url" }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+    <a href="{{ .Params.url }}" class="font-inter-medium link-dark link-underline-dark fs-4">
         {{ .Title }}
     </a>
     <div class="mt-2">{{ .Content }}</div>

@@ -5,10 +5,10 @@
         <div class="row d-flex align-items-center g-5">
             {{ range.Data.Pages.ByTitle }}
             <div class="col-4">
-                {{ if .Param "portrait" }}
-                <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="384" height="512">
+                {{ if .Params.portrait }}
+                <img src="{{ .Params.url }}" alt="{{ .Title }}" class="img-fluid" width="384" height="512">
                 {{ else }}
-                <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="512" height="384">
+                <img src="{{ .Params.url }}" alt="{{ .Title }}" class="img-fluid" width="512" height="384">
                 {{ end }}
             </div>
             {{ end }}
@@ -20,10 +20,10 @@
     {{ range.Data.Pages.ByTitle }}
     <div class="d-flex justify-content-center mt-5">
         <div>
-            {{ if .Param "portrait" }}
-            <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="384" height="512">
+            {{ if .Params.portrait }}
+            <img src="{{ .Params.url }}" alt="{{ .Title }}" class="img-fluid" width="384" height="512">
             {{ else }}
-            <img src="{{ .Param "url" }}" alt="{{ .Title }}" class="img-fluid" width="512" height="384">
+            <img src="{{ .Params.url }}" alt="{{ .Title }}" class="img-fluid" width="512" height="384">
             {{ end }}
         </div>
     </div>

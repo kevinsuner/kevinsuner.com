@@ -5,7 +5,7 @@
     <div class="row g-5">
         {{ range.Data.Pages.ByDate.Reverse }}
         <div class="col-4">
-            <a href="{{ .Param "url" }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+            <a href="{{ .Params.url }}" class="font-inter-medium link-dark link-underline-dark fs-4">
                 {{ .Title }}
             </a>
             <div class="mt-2">{{ .Content }}</div>
@@ -17,7 +17,7 @@
 <!-- Hidden on MD, LG, XL and XXL breakpoints -->
 <section class="container d-block d-sm-block d-md-none">
     {{ range.Data.Pages.ByDate.Reverse }}
-    <a href="{{ .Param "url" }}" class="font-inter-medium link-dark link-underline-dark fs-4">
+    <a href="{{ .Params.url }}" class="font-inter-medium link-dark link-underline-dark fs-4">
         {{ .Title }}
     </a>
     <div class="mt-2">{{ .Content }}</div>
