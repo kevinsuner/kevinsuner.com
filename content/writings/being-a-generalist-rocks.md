@@ -9,8 +9,6 @@ date: "2025-09-17"
 type: "writings"
 ---
 
-# Being a generalist rocks
-
 When I got my first job as a professional programmer *(I define "professional
 programmer" as someone that gets paid to code)* there were no differences between
 front-end, back-end and dev-ops, everything was englobed by a single title called
