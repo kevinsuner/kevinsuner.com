@@ -1,6 +1,6 @@
 ---
 title: "Bifrost"
-date: "2024-05-10"
+date: "2025-05-10"
 type: "projects"
 params:
   url: "https://github.com/kevinsuner/bifrost"
