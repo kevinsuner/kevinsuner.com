@@ -30,7 +30,7 @@ otherwise the already suspicious telecommunication companies would have buried
 it under the ground—and decentralized by nature.
 
 Not much has changed from its original design and implementation. We have added
-things on top of it that's for sure, but the foundation is still there and
+things on top of it, that's for sure, but the foundation is still there and
 holding strong. What is becoming more and more problematic is our over-reliance
 on hosting providers, which at times throw half of the Internet into the void
 for hours on end—yes, I'm talking about AWS and the "us-east-1" incident—.
