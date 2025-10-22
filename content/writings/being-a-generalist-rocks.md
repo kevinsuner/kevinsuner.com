@@ -32,4 +32,3 @@ these things on my plate is what made me develop a perpetual beginners mentality
 the point were when given a problem to solve I'm a hundred percent confident I'll
 figure it out, be it writing an HTTP client in Odin, a static-site generator in Go,
 or CI/CD pipelines in Groovy, I. DON'T. CARE. because I know how to program.
-
