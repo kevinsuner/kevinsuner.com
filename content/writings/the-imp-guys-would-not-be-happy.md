@@ -23,7 +23,7 @@ That is the place from where the "IMP Guys" that you see in the header of this
 article comes from, a group of visionaries and pioneers that assembled together
 to work on *J. C. R. Licklider* vision of what computers could be, and set out
 to make possible for computers with different architectures and from different
-makes to talk to each other; and in doing so created what we have come to know
+makes to talk to each other; and in doing so created what we've come to know
 as the Internet, the backbone of our modern society, built with an almost
 maniacal focus on reliability—they couldn't allow themselves to flounder or
 else the already suspicious telecom companies would've buried it under the
